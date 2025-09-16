@@ -26,12 +26,7 @@ int main(int argc, char *argv[])
     splash.show();
     app.processEvents();
 
-    // Wait 5 seconds
-    QTimer::singleShot(5000, &splash, &QSplashScreen::close);
-    QTimer::singleShot(5000, &app, SLOT(quit()));
-    app.exec();
-
-    // Profile selection
+    // Profile selection and initialization while splash is visible
     QString profilesDir = QDir::currentPath() + "/profiles";
     QDir().mkpath(profilesDir);
     QStringList profiles;
@@ -39,15 +34,24 @@ int main(int argc, char *argv[])
         profiles << QFileInfo(file).baseName();
     }
     ProfileDialog profileDialog(profiles);
-    if (profileDialog.exec() != QDialog::Accepted) return 0;
+    int dialogResult = profileDialog.exec();
     QString profileName = profileDialog.selectedProfile();
-    if (profileName.isEmpty()) return 0;
+    if (dialogResult != QDialog::Accepted || profileName.isEmpty()) {
+        splash.close();
+        return 0;
+    }
 
     // Use profile-specific preferences file
     QuizWindow window;
     window.prefsFile = profilesDir + "/" + profileName + ".json";
     window.loadPreferences();
     QuizGame game(&window);
-    window.show();
+
+    // Keep splash for a minimum time (e.g. 1s), then show main window
+    QTimer::singleShot(1000, [&]() {
+        splash.close();
+        window.show();
+    });
+
     return app.exec();
 }
