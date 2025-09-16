@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="4" y="4" width="248" height="248" rx="48" fill="#1976D2" stroke="white" stroke-width="8"/>
+  <rect x="0" y="0" width="256" height="256" rx="52" fill="none" stroke="#1976D2" stroke-width="4"/>
+  <g style="isolation:isolate;">
+  <text x="28%" y="32.4%" text-anchor="middle" dominant-baseline="middle" font-family="'Noto Sans JP', 'Yu Gothic', 'Meiryo', sans-serif" font-size="92" font-weight="400" fill="white" stroke="white" stroke-width="1.5" style="paint-order:stroke">ク</text>
+  <text x="50%" y="50.4%" text-anchor="middle" dominant-baseline="middle" font-family="'Noto Sans JP', 'Yu Gothic', 'Meiryo', sans-serif" font-size="92" font-weight="400" fill="white" stroke="white" stroke-width="1.5" style="paint-order:stroke">イ</text>
+  <text x="72%" y="68.4%" text-anchor="middle" dominant-baseline="middle" font-family="'Noto Sans JP', 'Yu Gothic', 'Meiryo', sans-serif" font-size="92" font-weight="400" fill="white" stroke="white" stroke-width="1.5" style="paint-order:stroke">ズ</text>
+  </g>
+</svg>

@@ -1,0 +1,45 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Japanese Alphabet Quiz (Python)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/hiragana_quiz.py",
+            "python": "/home/brucequinton/Projects/Japanese Alphabet/.venv/bin/python",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Debug Japanese Alphabet Quiz (C++)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/japanese_alphabet_quiz",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                { "description": "Enable pretty-printing for gdb", "text": "-enable-pretty-printing", "ignoreFailures": true }
+            ]
+        },
+        {
+            "name": "Debug Japanese Alphabet Quiz (Qt C++)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/hiragana-quiz-qt/build/hiragana-quiz-qt",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/hiragana-quiz-qt/build",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                { "description": "Enable pretty-printing for gdb", "text": "-enable-pretty-printing", "ignoreFailures": true }
+            ],
+            "preLaunchTask": "build"
+        }
+    ]
+}

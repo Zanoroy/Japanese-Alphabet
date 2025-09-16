@@ -1,0 +1,23 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Run Japanese Alphabet Quiz",
+			"command": "/home/brucequinton/Projects/Japanese Alphabet/.venv/bin/python",
+			"args": [
+				"hiragana_quiz.py"
+			],
+			"group": "build",
+			"problemMatcher": []
+		},
+		{
+			"type": "shell",
+			"label": "Build Japanese Alphabet Quiz (C++)",
+			"command": "g++ -g -fPIC -std=c++17 japanese_alphabet_quiz.cpp -o japanese_alphabet_quiz $(pkg-config --cflags --libs Qt5Widgets Qt5Core Qt5Gui)",
+			"group": "build",
+			"problemMatcher": ["$gcc"],
+	    	"detail": "Builds the C++ version of the Japanese Alphabet Quiz",
+		}
+	]
+}
