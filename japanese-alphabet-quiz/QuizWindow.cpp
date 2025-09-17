@@ -10,7 +10,6 @@
 
 
 QuizWindow::QuizWindow(QWidget *parent) : QWidget(parent) {
-
 #ifdef Q_OS_WIN
     setWindowIcon(QIcon(":/appicon.ico"));
 #else
@@ -26,6 +25,21 @@ QuizWindow::QuizWindow(QWidget *parent) : QWidget(parent) {
     hideTablesCB = new QCheckBox("Hide alphabet tables and script checkboxes", this);
     mainLayout->addWidget(hideTablesCB);
     connect(hideTablesCB, &QCheckBox::checkStateChanged, this, &QuizWindow::savePreferences);
+
+    // Weighted practice option
+    weightedPracticeCB = new QCheckBox("Practice hard characters more often", this);
+    weightedPracticeCB->setChecked(false);
+    mainLayout->addWidget(weightedPracticeCB);
+
+    // Reset hard characters button
+    resetHardCharsButton = new QPushButton("Reset Hard Characters", this);
+    mainLayout->addWidget(resetHardCharsButton);
+
+    // Now connect signals for widgets that are initialized
+    connect(weightedPracticeCB, &QCheckBox::checkStateChanged, this, &QuizWindow::savePreferences);
+    connect(resetHardCharsButton, &QPushButton::clicked, this, [this]() {
+        Q_EMIT resetHardCharactersRequested();
+    });
 
     QHBoxLayout *timesLayout = new QHBoxLayout();
     timesLabel = new QLabel("Times to show:", this);
@@ -188,6 +202,14 @@ void QuizWindow::savePreferences() {
     // Times to show
     prefs["times_to_show"] = timesSpin->value();
 
+    // Save weighted practice option
+    prefs["weighted_practice"] = weightedPracticeCB->isChecked();
+
+    // Save error stats if present (to be filled by QuizGame)
+    if (errorStatsJson.size() > 0) {
+        prefs["error_stats"] = errorStatsJson;
+    }
+
     QFile file(prefsFile);
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QJsonDocument doc(prefs);
@@ -228,6 +250,14 @@ void QuizWindow::loadPreferences() {
     if (prefs.contains("times_to_show")) {
         int t = prefs["times_to_show"].toInt(1);
         if (t > 0) timesSpin->setValue(t);
+    }
+    // Weighted practice
+    if (prefs.contains("weighted_practice")) weightedPracticeCB->setChecked(prefs["weighted_practice"].toBool(false));
+    // Load error stats if present
+    if (prefs.contains("error_stats") && prefs["error_stats"].isObject()) {
+        errorStatsJson = prefs["error_stats"].toObject();
+    } else {
+        errorStatsJson = QJsonObject();
     }
 
     // Disable tables if their script checkbox is not checked

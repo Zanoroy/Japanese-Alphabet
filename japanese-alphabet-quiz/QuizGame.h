@@ -1,6 +1,7 @@
 #ifndef QUIZGAME_H
 #define QUIZGAME_H
 #include <QObject>
+#include <QMap>
 #include <vector>
 #include <set>
 #include <map>
@@ -19,6 +20,9 @@ public:
     void updateScore();
     void showSummaryAndReset(const std::vector<std::pair<QString, QString>> &allChars);
     std::vector<std::vector<KanaEntry>> getEnabledAlphabets() const;
+    void loadErrorStats();
+    void saveErrorStats();
+    void resetErrorStats();
 private:
     QuizWindow *window;
     int correctCount = 0;
@@ -30,6 +34,7 @@ private:
     std::map<std::pair<QString, QString>, int> charStatsCorrect;
     std::map<std::pair<QString, QString>, int> charStatsIncorrect;
     int timesToShow = 1;
+    QMap<std::pair<QString, QString>, int> errorStats;
 };
 
 #endif // QUIZGAME_H

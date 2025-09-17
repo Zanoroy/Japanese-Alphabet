@@ -1,6 +1,7 @@
 #ifndef QUIZWINDOW_H
 #define QUIZWINDOW_H
 #include <QWidget>
+#include <QJsonObject>
 #include <QTableWidget>
 #include <QCheckBox>
 #include <QSpinBox>
@@ -28,13 +29,17 @@ public:
     std::vector<bool> getRowChecks(const std::vector<QCheckBox*> &checks) const;
     QTableWidget *hiraganaTable, *katakanaTable, *kanjiTable;
     std::vector<QCheckBox*> hiraganaRowChecks, katakanaRowChecks, kanjiRowChecks;
-    QCheckBox *hiraganaCB, *katakanaCB, *kanjiCB, *hideTablesCB;
+    QCheckBox *hiraganaCB, *katakanaCB, *kanjiCB, *hideTablesCB, *weightedPracticeCB;
+    QPushButton *resetHardCharsButton;
     QSpinBox *timesSpin;
     QLabel *scoreLabel, *charLabel, *feedbackLabel, *timesLabel, *countdownLabel;
     void setCountdown(int remaining);
     QLineEdit *input;
     QString prefsFile;
     QFont scoreFont, charFont;
+        QJsonObject errorStatsJson; // Declare errorStatsJson as a member
+    signals:
+        void resetHardCharactersRequested(); // Signal for reset button
     protected:
         bool eventFilter(QObject *obj, QEvent *event) override;
 };

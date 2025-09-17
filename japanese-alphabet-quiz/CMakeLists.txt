@@ -21,13 +21,9 @@ endif()
 
 add_executable(japanese-alphabet-quiz
     main.cpp
-    QuizWindow.h
     QuizWindow.cpp
-    QuizGame.h
     QuizGame.cpp
-    AlphabetData.h
     AlphabetData.cpp
-    ProfileDialog.h
     ProfileDialog.cpp
     ${japanese-alphabet-quiz_RESOURCES}
     ${APP_ICON_RESOURCE}

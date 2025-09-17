@@ -1,10 +1,15 @@
 #include "QuizGame.h"
+#include <QMap>
 #include <QMessageBox>
 #include <QTimer>
 #include <algorithm>
 #include <random>
 
 QuizGame::QuizGame(QuizWindow *window) : QObject(window), window(window) {
+    // Load error stats from window
+    loadErrorStats();
+    // Connect reset button
+    connect(window, &QuizWindow::resetHardCharactersRequested, this, &QuizGame::resetErrorStats);
     connect(window->timesSpin, QOverload<int>::of(&QSpinBox::valueChanged), this, &QuizGame::newQuiz);
     connect(window->hiraganaCB, &QCheckBox::checkStateChanged, [this](int state){ handleScriptCheckbox("hiragana", state); });
     connect(window->katakanaCB, &QCheckBox::checkStateChanged, [this](int state){ handleScriptCheckbox("katakana", state); });
@@ -73,10 +78,26 @@ void QuizGame::newQuestion(bool excludeCurrent) {
         auto it = std::find(available.begin(), available.end(), std::make_pair(currentKana, currentRomaji));
         if (it != available.end()) available.erase(it);
     }
+    // Weighted random selection if enabled
+    bool weighted = window->weightedPracticeCB && window->weightedPracticeCB->isChecked();
+    std::vector<double> weights;
+    if (weighted) {
+        for (const auto &pair : available) {
+            int err = errorStats.value(pair, 0);
+            weights.push_back(1.0 + err * 3.0); // base weight 1, +3 per error
+        }
+    }
     std::random_device rd;
     std::mt19937 g(rd());
-    std::uniform_int_distribution<> dist(0, static_cast<int>(available.size()) - 1);
-    auto chosen = available[dist(g)];
+    int idx = 0;
+    if (weighted && !weights.empty()) {
+        std::discrete_distribution<> dist(weights.begin(), weights.end());
+        idx = dist(g);
+    } else {
+        std::uniform_int_distribution<> dist(0, static_cast<int>(available.size()) - 1);
+        idx = dist(g);
+    }
+    auto chosen = available[idx];
     currentKana = chosen.first;
     currentRomaji = chosen.second;
     window->setChar(currentKana);
@@ -105,6 +126,11 @@ void QuizGame::checkAnswer() {
                 window->highlightTableChar(currentKana, currentRomaji, "#4CAF50"); // green
             }
         }
+    // Decrease error count by 1 (min 0) on correct answer
+    auto key = std::make_pair(currentKana, currentRomaji);
+    int prevErr = errorStats.value(key, 0);
+    errorStats[key] = std::max(0, prevErr - 1);
+    saveErrorStats();
         window->updateScore(correctCount, retryCount);
         if (unansweredChars.size() > 1)
             newQuestion(true);
@@ -113,11 +139,52 @@ void QuizGame::checkAnswer() {
     } else {
         retryCount++;
         charStatsIncorrect[{currentKana, currentRomaji}]++;
+    auto key = std::make_pair(currentKana, currentRomaji);
+    errorStats[key] = errorStats.value(key, 0) + 5;
+        saveErrorStats();
         window->highlightTableChar(currentKana, currentRomaji, "#F44336"); // red
-        window->updateScore(correctCount, retryCount);
         window->setFeedback(QString("Incorrect! %1 = %2").arg(currentKana, currentRomaji), true);
-        QTimer::singleShot(1000, [this]{ newQuestion(true); });
+        window->updateScore(correctCount, retryCount);
+        // Show next question after a short delay
+        QTimer::singleShot(700, this, [this]() {
+            if (unansweredChars.size() > 1)
+                newQuestion(true);
+            else
+                newQuestion();
+        });
     }
+}
+
+// --- Error stats persistence ---
+void QuizGame::loadErrorStats() {
+    errorStats.clear();
+    if (!window->errorStatsJson.isEmpty()) {
+        for (auto it = window->errorStatsJson.begin(); it != window->errorStatsJson.end(); ++it) {
+            QString key = it.key();
+            int val = it.value().toInt();
+            int sep = key.indexOf("|");
+            if (sep > 0) {
+                QString kana = key.left(sep);
+                QString romaji = key.mid(sep+1);
+                errorStats[{kana, romaji}] = val;
+            }
+        }
+    }
+}
+
+void QuizGame::saveErrorStats() {
+    QJsonObject obj;
+    for (auto it = errorStats.begin(); it != errorStats.end(); ++it) {
+        QString key = it.key().first + "|" + it.key().second;
+        obj[key] = it.value();
+    }
+    window->errorStatsJson = obj;
+    window->savePreferences();
+}
+
+void QuizGame::resetErrorStats() {
+    errorStats.clear();
+    saveErrorStats();
 }
 
 void QuizGame::handleScriptCheckbox(const QString &script, int state) {
