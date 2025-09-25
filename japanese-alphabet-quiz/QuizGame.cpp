@@ -81,21 +81,28 @@ void QuizGame::newQuestion(bool excludeCurrent) {
     // Weighted random selection if enabled
     bool weighted = window->weightedPracticeCB && window->weightedPracticeCB->isChecked();
     std::vector<double> weights;
+    int idx = 0;
+    std::random_device rd;
+    std::mt19937 g(rd());
     if (weighted) {
         for (const auto &pair : available) {
             int err = errorStats.value(pair, 0);
             weights.push_back(1.0 + err * 3.0); // base weight 1, +3 per error
         }
-    }
-    std::random_device rd;
-    std::mt19937 g(rd());
-    int idx = 0;
-    if (weighted && !weights.empty()) {
-        std::discrete_distribution<> dist(weights.begin(), weights.end());
-        idx = dist(g);
+        if (!weights.empty()) {
+            std::discrete_distribution<> dist(weights.begin(), weights.end());
+            idx = dist(g);
+            // If the selected character has errorStats > 0, print Weighted: hard
+            if (errorStats.value(available[idx], 0) > 0) {
+                printf("Weighted: hard %s (%s)\n", available[idx].first.toStdString().c_str(), available[idx].second.toStdString().c_str());
+            } else {
+                printf("Weighted: standard %s (%s)\n", available[idx].first.toStdString().c_str(), available[idx].second.toStdString().c_str());
+            }
+        }
     } else {
         std::uniform_int_distribution<> dist(0, static_cast<int>(available.size()) - 1);
         idx = dist(g);
+        printf("Standard %s (%s)\n", available[idx].first.toStdString().c_str(), available[idx].second.toStdString().c_str());
     }
     auto chosen = available[idx];
     currentKana = chosen.first;
@@ -140,7 +147,8 @@ void QuizGame::checkAnswer() {
         retryCount++;
         charStatsIncorrect[{currentKana, currentRomaji}]++;
     auto key = std::make_pair(currentKana, currentRomaji);
-    errorStats[key] = errorStats.value(key, 0) + 5;
+    // increase error count by 2 on incorrect answer
+    errorStats[key] = errorStats.value(key, 0) + 2;
         saveErrorStats();
         window->highlightTableChar(currentKana, currentRomaji, "#F44336"); // red
         window->setFeedback(QString("Incorrect! %1 = %2").arg(currentKana, currentRomaji), true);

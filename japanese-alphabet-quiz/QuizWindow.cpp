@@ -24,7 +24,17 @@ QuizWindow::QuizWindow(QWidget *parent) : QWidget(parent) {
 
     hideTablesCB = new QCheckBox("Hide alphabet tables and script checkboxes", this);
     mainLayout->addWidget(hideTablesCB);
-    connect(hideTablesCB, &QCheckBox::checkStateChanged, this, &QuizWindow::savePreferences);
+    connect(hideTablesCB, &QCheckBox::checkStateChanged, this, [this](int state) {
+        bool hide = (state == Qt::Checked);
+        hiraganaTable->setVisible(!hide);
+        katakanaTable->setVisible(!hide);
+        kanjiTable->setVisible(!hide);
+        // Hide/show script checkboxes row
+        for (auto cb : {hiraganaCB, katakanaCB, kanjiCB}) {
+            cb->setVisible(!hide);
+        }
+        savePreferences();
+    });
 
     // Weighted practice option
     weightedPracticeCB = new QCheckBox("Practice hard characters more often", this);
