@@ -58,7 +58,7 @@ QuizWindow::QuizWindow(QWidget *parent) : QWidget(parent) {
     timesSpin->setMinimum(1);
     timesSpin->setMaximum(20);
     timesSpin->setValue(1);
-    timesSpin->setFixedWidth(35);
+    timesSpin->setFixedWidth(60);
     timesLayout->addWidget(timesLabel);
     timesLayout->addWidget(timesSpin);
     mainLayout->addLayout(timesLayout);
