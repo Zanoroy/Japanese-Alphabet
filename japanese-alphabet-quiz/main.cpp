@@ -4,10 +4,15 @@
 #include "QuizWindow.h"
 #include "QuizGame.h"
 #include "ProfileDialog.h"
+#include "MainMenuDialog.h"
+#include "VocabularySelectionDialog.h"
+#include "VocabularyData.h"
+#include "VocabularyQuizWindow.h"
 #include <QSplashScreen>
 #include <QPixmap>
 #include <QTimer>
 #include <QDir>
+#include <QFileInfo>
 #include <QDebug>
 
 int main(int argc, char *argv[])
@@ -41,17 +46,68 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    // Use profile-specific preferences file
-    QuizWindow window;
-    window.prefsFile = profilesDir + "/" + profileName + ".json";
-    window.loadPreferences();
-    QuizGame game(&window);
+    splash.close();
 
-    // Keep splash for a minimum time (e.g. 1s), then show main window
-    QTimer::singleShot(1000, [&]() {
-        splash.close();
-        window.show();
-    });
+    // Main application loop
+    while (true) {
+        // Show main menu
+        MainMenuDialog mainMenu(profileName);
+        if (mainMenu.exec() != QDialog::Accepted) {
+            return 0; // User chose exit or closed dialog
+        }
 
-    return app.exec();
+        MainMenuDialog::MenuChoice choice = mainMenu.getChoice();
+        
+        if (choice == MainMenuDialog::Exit) {
+            return 0;
+        }
+        else if (choice == MainMenuDialog::AlphabetQuiz) {
+            // Start alphabet quiz
+            QuizWindow window;
+            window.prefsFile = profilesDir + "/" + profileName + ".json";
+            window.loadPreferences();
+            QuizGame game(&window);
+            window.show();
+            app.exec();
+            // After quiz window closes, return to main menu
+        }
+        else if (choice == MainMenuDialog::Vocabularies) {
+            // Load vocabularies
+            std::vector<Vocabulary> vocabularies;
+            QString vocabFile = profilesDir + "/vocabularies.json";
+            VocabularyData::loadVocabularies(vocabFile, vocabularies);
+            
+            if (vocabularies.empty()) {
+                // Show message and return to main menu
+                continue;
+            }
+            
+            // Show vocabulary selection dialog
+            VocabularySelectionDialog vocabDialog(vocabularies);
+            if (vocabDialog.exec() == QDialog::Accepted) {
+                // Get selected vocabulary words
+                std::vector<VocabularyWord> wordsToQuiz;
+                
+                if (vocabDialog.isPracticeAll()) {
+                    // Practice all vocabularies
+                    wordsToQuiz = VocabularyData::getAllWords(vocabularies);
+                } else {
+                    // Practice selected vocabulary
+                    int selectedIndex = vocabDialog.getSelectedVocabularyIndex();
+                    if (selectedIndex >= 0 && selectedIndex < vocabularies.size()) {
+                        wordsToQuiz = vocabularies[selectedIndex].words;
+                    }
+                }
+                
+                if (!wordsToQuiz.empty()) {
+                    // Start vocabulary quiz
+                    VocabularyQuizWindow *vocabQuiz = new VocabularyQuizWindow(wordsToQuiz);
+                    vocabQuiz->show();
+                    vocabQuiz->setAttribute(Qt::WA_DeleteOnClose);
+                    // Note: We don't call app.exec() here, allowing multiple windows
+                }
+            }
+            // Return to main menu after vocabulary selection
+        }
+    }
 }

@@ -1,0 +1,104 @@
+{
+  "Vocabularies": [
+    {
+      "Vocabulary": "Basic Greetings",
+      "words": [
+        {
+          "japanese": "こんにちは",
+          "romaji": "konnichiwa",
+          "english": "hello"
+        },
+        {
+          "japanese": "おはよう",
+          "romaji": "ohayou",
+          "english": "good morning"
+        },
+        {
+          "japanese": "こんばんは",
+          "romaji": "konbanwa",
+          "english": "good evening"
+        },
+        {
+          "japanese": "ありがとう",
+          "romaji": "arigatou",
+          "english": "thank you"
+        },
+        {
+          "japanese": "さようなら",
+          "romaji": "sayounara",
+          "english": "goodbye"
+        }
+      ]
+    },
+    {
+      "Vocabulary": "Family Members",
+      "words": [
+        {
+          "japanese": "おかあさん",
+          "romaji": "okaasan",
+          "english": "mother"
+        },
+        {
+          "japanese": "おとうさん",
+          "romaji": "otousan",
+          "english": "father"
+        },
+        {
+          "japanese": "あね",
+          "romaji": "ane",
+          "english": "older sister"
+        },
+        {
+          "japanese": "あに",
+          "romaji": "ani",
+          "english": "older brother"
+        },
+        {
+          "japanese": "いもうと",
+          "romaji": "imouto",
+          "english": "younger sister"
+        },
+        {
+          "japanese": "おとうと",
+          "romaji": "otouto",
+          "english": "younger brother"
+        }
+      ]
+    },
+    {
+      "Vocabulary": "Colors",
+      "words": [
+        {
+          "japanese": "あか",
+          "romaji": "aka",
+          "english": "red"
+        },
+        {
+          "japanese": "あお",
+          "romaji": "ao",
+          "english": "blue"
+        },
+        {
+          "japanese": "きいろ",
+          "romaji": "kiiro",
+          "english": "yellow"
+        },
+        {
+          "japanese": "みどり",
+          "romaji": "midori",
+          "english": "green"
+        },
+        {
+          "japanese": "くろ",
+          "romaji": "kuro",
+          "english": "black"
+        },
+        {
+          "japanese": "しろ",
+          "romaji": "shiro",
+          "english": "white"
+        }
+      ]
+    }
+  ]
+}
