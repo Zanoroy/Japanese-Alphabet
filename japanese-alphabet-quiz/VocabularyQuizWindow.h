@@ -17,6 +17,11 @@ class VocabularyQuizWindow : public QWidget {
 
 public:
     explicit VocabularyQuizWindow(const std::vector<VocabularyWord> &words, QWidget *parent = nullptr);
+    void resetQuiz();
+
+signals:
+    void quizCompleted();
+    void returnToMenuRequested();
 
 private slots:
     void onRomajiCheckboxChanged(int state);
@@ -31,20 +36,24 @@ private:
     void updateCheckboxStates();
     void checkRomajiAnswer();
     void checkEnglishAnswer();
-    void showError(const QString &message, const QString &correctAnswer = "");
+    void showError(const QString &message, const QString &correctAnswer = "", const QString &comment = "");
+    void showComment(const QString &comment);
     void updateScore();
     void showResults();
 
     // UI elements
     QVBoxLayout *mainLayout;
     QLabel *titleLabel;
+    QHBoxLayout *checkboxLayout;
     QCheckBox *romajiCheckbox;
     QCheckBox *englishCheckbox;
     QPushButton *startButton;
     QLabel *questionLabel;
+    QLabel *instructionLabel;
     QLineEdit *answerInput;
     QPushButton *checkButton;
     QLabel *errorLabel;
+    QLabel *commentLabel;
     QLabel *scoreLabel;
     QPushButton *backButton;
 
@@ -60,9 +69,9 @@ private:
     int correctEnglishCount;
     int incorrectEnglishCount;
     std::map<VocabularyWord*, int> incorrectWords; // Track incorrect attempts per word
-    
-    // Timer for error display
-    QTimer *errorTimer;
+
+    // Timer for message/error display
+    QTimer *msgTimer;
     bool quizStarted;
 };
 

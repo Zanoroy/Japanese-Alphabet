@@ -14,6 +14,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QDebug>
+#include <QThread>
 
 int main(int argc, char *argv[])
 {
@@ -104,7 +105,17 @@ int main(int argc, char *argv[])
                     VocabularyQuizWindow *vocabQuiz = new VocabularyQuizWindow(wordsToQuiz);
                     vocabQuiz->show();
                     vocabQuiz->setAttribute(Qt::WA_DeleteOnClose);
-                    // Note: We don't call app.exec() here, allowing multiple windows
+                    
+                    // Connect signals to handle quiz completion
+                    QObject::connect(vocabQuiz, &VocabularyQuizWindow::returnToMenuRequested, [&]() {
+                        // Return to main menu will happen when the while loop continues
+                    });
+                    
+                    // Run event loop until vocabulary quiz is closed
+                    while (vocabQuiz && vocabQuiz->isVisible()) {
+                        app.processEvents();
+                        QThread::msleep(10);
+                    }
                 }
             }
             // Return to main menu after vocabulary selection

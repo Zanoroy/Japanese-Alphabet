@@ -7,9 +7,11 @@
 #include <vector>
 
 struct VocabularyWord {
-    QString japanese;
     QString romaji;
+    QString japanese;
+    QString kanji; // Optional kanji representation
     QString english;
+    QString comment; // Optional comment for additional info
 };
 
 struct Vocabulary {

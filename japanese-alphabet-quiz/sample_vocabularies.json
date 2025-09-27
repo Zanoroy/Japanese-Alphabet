@@ -1,6 +1,517 @@
 {
   "Vocabularies": [
     {
+      "Vocabulary": "Vocabulary set 1",
+      "words": [
+        {
+          "japanese": "わたし",
+          "romaji": "watashi",
+          "english": "I",
+          "kanji": "私"
+        },
+        {
+          "japanese": "あなた",
+          "romaji": "anata",
+          "english": "you",
+          "kanji": ""
+        },
+        {
+          "romaji": "ano hito",
+          "japanese": "あの ひと",
+          "kanji": "あの人",
+          "english": "that person"
+        },
+        {
+          "romaji": "ano kata",
+          "japanese": "あの かた",
+          "kanji": "あの方",
+          "english": "that person",
+          "comment": "polite version of 'that person'"
+        },
+        {
+          "romaji": "san",
+          "japanese": "さん",
+          "english": "Mr/Ms suffix"
+        },
+        {
+          "romaji": "chan",
+          "japanese": "ちゃん",
+          "english": "child suffix"
+        },
+        {
+          "romaji": "jin",
+          "japanese": "じん",
+          "english": "nationality suffix",
+          "comment": "e.g., Australia-jin - Australian person"
+        },
+        {
+          "romaji": "sensei",
+          "japanese": "せんせい",
+          "english": "teacher"
+        },
+        {
+          "romaji": "kyoshi",
+          "japanese": "きょうし",
+          "english": "teacher"
+        },
+        {
+          "romaji": "gakusei",
+          "japanese": "がくせい",
+          "english": "student"
+        },
+        {
+          "romaji": "shain",
+          "japanese": "しゃいん",
+          "english": "company employee"
+        },
+        {
+          "romaji": "ginkoin",
+          "japanese": "ぎんこういん",
+          "english": "bank employee"
+        },
+        {
+          "romaji": "isha",
+          "japanese": "いしゃ",
+          "english": "doctor"
+        },
+        {
+          "romaji": "kenkyusha",
+          "japanese": "けんきゅうしゃ",
+          "english": "researcher"
+        },
+        {
+          "romaji": "daigaku",
+          "japanese": "だいがく",
+          "english": "university"
+        },
+        {
+          "romaji": "byoin",
+          "japanese": "びょういん",
+          "english": "hospital"
+        },
+        {
+          "romaji": "dare",
+          "japanese": "だれ",
+          "english": "who"
+        },
+        {
+          "romaji": "sai",
+          "japanese": "さい",
+          "english": "years old"
+        },
+        {
+          "romaji": "nan-sai",
+          "japanese": "なんさい",
+          "english": "how old"
+        },
+        {
+          "romaji": "hai",
+          "japanese": "はい",
+          "english": "yes"
+        },
+        {
+          "romaji": "iie",
+          "japanese": "いいえ",
+          "english": "no"
+        },
+        {
+          "romaji": "hajimemashite",
+          "japanese": "はじめまして",
+          "english": "nice to meet you"
+        },
+        {
+          "romaji": "~kara kimashita",
+          "japanese": "から きました",
+          "english": "I come from ~",
+          "comment": "e.g., Australia kara kimashita - I come from Australia"
+        },
+        {
+          "romaji": "dozo yoroshiku",
+          "japanese": "[どうぞ] よろしく",
+          "english": "nice to meet you",
+          "comment": "used at the end of self-introduction (polite)"
+        },
+        {
+          "romaji": "onegai shimasu",
+          "japanese": "[おねがいします]",
+          "english": "please",
+          "comment": "more polite than onegai"
+        },
+        {
+          "romaji": "shitsurei desu ga",
+          "japanese": "しつれい ですが",
+          "english": "Excuse me but",
+          "comment": "polite way to preface a question"
+        },
+        {
+          "romaji": "onamae wa?",
+          "japanese": "おなまえは",
+          "english": "May I have your name?",
+          "comment": "polite"
+        },
+        {
+          "romaji": "kochira wa ~san desu",
+          "japanese": "こちらは ~さん です",
+          "english": "This is Mr/Ms",
+          "comment": "used to introduce someone"
+        }
+      ]
+    },
+    {
+      "Vocabulary": "Vocabulary set 2",
+      "words": [
+        {
+          "japanese": "これ",
+          "romaji": "kore",
+          "english": "this",
+          "comment": "Used when the thing is near the speaker"
+        },
+        {
+          "japanese": "それ",
+          "romaji": "sore",
+          "english": "that",
+          "comment": "Used when the thing is near the listener"
+        },
+        {
+          "japanese": "あれ",
+          "romaji": "are",
+          "english": "that",
+          "comment": "Used when the thing is far from both the speaker and listener"
+        },
+        {
+          "japanese": "この",
+          "romaji": "kono",
+          "english": "this",
+          "comment": "Used with a noun, e.g. この ほん (kono hon) - this book (near me)"
+        },
+        {
+          "japanese": "その",
+          "romaji": "sono",
+          "english": "that",
+          "comment": "Used with a noun, e.g. その ほん (sono hon) - that book (near the listener)"
+        },
+        {
+          "japanese": "あの",
+          "romaji": "ano",
+          "english": "that ~ (thing over there)",
+          "comment": "Used with a noun, e.g. あの ほん (ano hon) - that book (far from both the speaker and listener)"
+        },
+        {
+          "romaji": "hon",
+          "japanese": "ほん",
+          "kanji": "本",
+          "english": "book",
+          "comment": ""
+        },
+        {
+          "romaji": "jisho",
+          "japanese": "じしょ",
+          "kanji": "辞書",
+          "english": "dictionary",
+          "comment": ""
+        },
+        {
+          "romaji": "zasshi",
+          "japanese": "ざっし",
+          "kanji": "雑誌",
+          "english": "magazine",
+          "comment": ""
+        },
+        {
+          "romaji": "shinbun",
+          "japanese": "しんぶん",
+          "kanji": "新聞",
+          "english": "newspaper",
+          "comment": ""
+        },
+        {
+          "romaji": "noto",
+          "japanese": "ノート",
+          "english": "notebook",
+          "comment": "Pronounced nooto"
+        },
+        {
+          "romaji": "techo",
+          "japanese": "てちょう",
+          "kanji": "手帳",
+          "english": "personal organizer",
+          "comment": "Pronounced techoo"
+        },
+        {
+          "romaji": "meishi",
+          "japanese": "めいし",
+          "kanji": "名刺",
+          "english": "business card",
+          "comment": ""
+        },
+        {
+          "romaji": "kado",
+          "japanese": "カード",
+          "english": "card",
+          "comment": "Pronounced kaado"
+        },
+        {
+          "romaji": "enpitsu",
+          "japanese": "えんぴつ",
+          "kanji": "鉛筆",
+          "english": "pencil",
+          "comment": ""
+        },
+        {
+          "romaji": "borupen",
+          "japanese": "ボールペン",
+          "kanji": "",
+          "english": "ballpoint pen",
+          "comment": "Pronounced booru pen"
+        },
+        {
+          "romaji": "shapu penshiru",
+          "japanese": "シャープペンシル",
+          "kanji": "鋼筆",
+          "english": "mechanical pencil",
+          "comment": "Pronounced shaapu penshiru"
+        },
+        {
+          "romaji": "kagi",
+          "japanese": "かぎ",
+          "kanji": "鍵",
+          "english": "key",
+          "comment": ""
+        },
+        {
+          "romaji": "tokei",
+          "japanese": "とけい",
+          "kanji": "時計",
+          "english": "watch; clock",
+          "comment": "Pronounced tokee"
+        },
+        {
+          "romaji": "kasa",
+          "japanese": "かさ",
+          "kanji": "傘",
+          "english": "umbrella",
+          "comment": ""
+        },
+        {
+          "romaji": "kaban",
+          "japanese": "かばん",
+          "kanji": "鞄",
+          "english": "bag",
+          "comment": ""
+        },
+        {
+          "romaji": "CD",
+          "japanese": "CD",
+          "kanji": "",
+          "english": "CD",
+          "comment": ""
+        },
+        {
+          "romaji": "terebi",
+          "japanese": "テレビ",
+          "kanji": "",
+          "english": "TV",
+          "comment": ""
+        },
+        {
+          "romaji": "rajio",
+          "japanese": "ラジオ",
+          "kanji": "",
+          "english": "radio",
+          "comment": ""
+        },
+        {
+          "romaji": "kamera",
+          "japanese": "カメラ",
+          "kanji": "",
+          "english": "camera",
+          "comment": ""
+        },
+        {
+          "romaji": "konpyuta",
+          "japanese": "コンピュータ",
+          "kanji": "",
+          "english": "computer",
+          "comment": "Pronounced konpyuuta"
+        },
+        {
+          "romaji": "kuruma",
+          "japanese": "くるま",
+          "kanji": "車",
+          "english": "car",
+          "comment": ""
+        },
+        {
+          "romaji": "tsukue",
+          "japanese": "つくえ",
+          "kanji": "机",
+          "english": "desk",
+          "comment": ""
+        },
+        {
+          "romaji": "isu",
+          "japanese": "いす",
+          "kanji": "椅子",
+          "english": "chair",
+          "comment": ""
+        },
+        {
+          "romaji": "chokoreto",
+          "japanese": "チョコレート",
+          "kanji": "",
+          "english": "chocolate",
+          "comment": ""
+        },
+        {
+          "romaji": "kohii",
+          "japanese": "コーヒー",
+          "kanji": "",
+          "english": "coffee",
+          "comment": "Pronounced koohii"
+        },
+        {
+          "romaji": "omiyage",
+          "japanese": "おみやげ",
+          "kanji": "",
+          "english": "souvenir",
+          "comment": "souvenir or present/gift"
+        },
+        {
+          "romaji": "ei-go",
+          "japanese": "えいご",
+          "kanji": "英語",
+          "english": "English language",
+          "comment": ""
+        },
+        {
+          "romaji": "Nihon-go",
+          "japanese": "にほんご",
+          "kanji": "日本語",
+          "english": "Japanese language",
+          "comment": ""
+        },
+        {
+          "romaji": "-go",
+          "japanese": "ご",
+          "kanji": "語",
+          "english": "language",
+          "comment": "suffix for language (Nihon-go.)"
+        },
+        {
+          "romaji": "nan",
+          "japanese": "なん",
+          "kanji": "何",
+          "english": "what",
+          "comment": ""
+        },
+        {
+          "romaji": "so",
+          "japanese": "そう",
+          "kanji": "",
+          "english": "so",
+          "comment": ""
+        },
+        {
+          "romaji": "ano",
+          "japanese": "あのう",
+          "kanji": "",
+          "english": "um; well",
+          "comment": "Pronounced anoo"
+        },
+        {
+          "romaji": "e",
+          "japanese": "えっ",
+          "kanji": "",
+          "english": "oh",
+          "comment": ""
+        },
+        {
+          "romaji": "Dozo",
+          "japanese": "どうぞ",
+          "kanji": "",
+          "english": "Here you are/please; go ahead",
+          "comment": "Here you are. (used when offering someone something)"
+        },
+        {
+          "romaji": "Domo arigatou gozaimasu",
+          "japanese": "どうもありがとうございます",
+          "kanji": "",
+          "english": "Thank you very much",
+          "comment": "Pronounced doomo arigatou. A polite way to say thank you."
+        },
+        {
+          "romaji": "So desu ka",
+          "japanese": "そうですか",
+          "kanji": "",
+          "english": "I see",
+          "comment": ""
+        },
+        {
+          "romaji": "Chigaimasu",
+          "japanese": "ちがいます",
+          "kanji": "違います",
+          "english": "No it isn't",
+          "comment": ""
+        },
+        {
+          "romaji": "a",
+          "japanese": "あ",
+          "kanji": "",
+          "english": "oh",
+          "comment": "oh! (used when you realize something)"
+        },
+        {
+          "romaji": "korekara osewa ni narimasu",
+          "japanese": "これから おせわ に なります",
+          "kanji": "これからお世話になります",
+          "english": "I will be in your care from now on",
+          "comment": ""
+        },
+        {
+          "romaji": "Kochira Koso [dozo] yoroshiku [onegaishimasu]",
+          "japanese": "こちら こそ [どうぞ] よろしく [おねがいします]",
+          "kanji": "こちら こそ [どうぞ] よろしく [お願いします]",
+          "english": "Pleased to meet you too",
+          "comment": "Pleased to meet you too (used in response to a [どうぞ] よろしく [おねがいします]"
+        }
+      ]
+    },
+    {
+      "Vocabulary": "Vocabulary set 3",
+      "words": [
+        {
+          "japanese": "どれ",
+          "romaji": "dore",
+          "english": "which (thing)?"
+        },
+        {
+          "japanese": "どの",
+          "romaji": "dono",
+          "english": "which ~?"
+        },
+        {
+          "japanese": "ここ",
+          "romaji": "koko",
+          "english": "here (place near me)"
+        },
+        {
+          "japanese": "そこ",
+          "romaji": "soko",
+          "english": "(place) there (place near you)"
+        },
+        {
+          "japanese": "あそこ",
+          "romaji": "asoko",
+          "english": "(place) over there (place over there)"
+        },
+        {
+          "japanese": "どこ",
+          "romaji": "doko",
+          "english": "(place) where?"
+        }        
+      ]
+    },
+    {
       "Vocabulary": "Basic Greetings",
       "words": [
         {
@@ -66,6 +577,61 @@
       ]
     },
     {
+      "Vocabulary": "Numbers",
+      "words": [
+        {
+          "japanese": "いち",
+          "romaji": "ichi",
+          "english": "one"
+        },
+        {
+          "japanese": "に",
+          "romaji": "ni",
+          "english": "two"
+        },
+        {
+          "japanese": "さん",
+          "romaji": "san",
+          "english": "three"
+        },
+        {
+          "japanese": "し / よん",
+          "romaji": "shi / yon",
+          "english": "four"
+        },
+        {
+          "japanese": "ご",
+          "romaji": "go",
+          "english": "five"
+        },
+        {
+          "japanese": "ろく",
+          "romaji": "roku",
+          "english": "six"
+        },
+        {
+          "japanese": "しち / なな",
+          "romaji": "shichi / nana",
+          "english": "seven"
+        },
+        {
+          "japanese": "はち",
+          "romaji": "hachi",
+          "english": "eight"
+        },
+        {
+          "japanese": "きゅう / く",
+          "romaji": "kyuu / ku",
+          "english": "nine"
+        },
+        {
+          "japanese": "じゅう",
+          "romaji": "juu",
+          "english": "ten"
+        }
+      ]
+    },
+    {
       "Vocabulary": "Colors",
       "words": [
         {
@@ -99,6 +665,24 @@
           "english": "white"
         }
       ]
+    },
+    {
+      "Vocabulary": "Test Entries",
+      "words": [
+         {
+          "romaji": "ano kata",
+          "japanese": "あの かた",
+          "kanji": "あの方",
+          "english": "that person",
+          "comment": "polite version of 'that person'"
+        },
+        {
+          "romaji": "jin",
+          "japanese": "じん",
+          "english": "nationality suffix",
+          "comment": "e.g., Australia-jin - Australian person"
+        }
+     ]
     }
   ]
 }

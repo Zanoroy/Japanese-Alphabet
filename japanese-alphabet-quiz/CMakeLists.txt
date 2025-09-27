@@ -29,6 +29,7 @@ add_executable(japanese-alphabet-quiz
     VocabularyData.cpp
     VocabularySelectionDialog.cpp
     VocabularyQuizWindow.cpp
+    VocabularyResultsDialog.cpp
     ${japanese-alphabet-quiz_RESOURCES}
     ${APP_ICON_RESOURCE}
 )
