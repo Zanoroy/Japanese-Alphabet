@@ -1,19 +1,29 @@
 #include "VocabularySelectionDialog.h"
 #include <QFont>
 #include <QIcon>
+#include <QComboBox>
 
-VocabularySelectionDialog::VocabularySelectionDialog(const std::vector<Vocabulary> &vocabularies, QWidget *parent)
-    : QDialog(parent), practiceAll(false), selectedIndex(-1), vocabularies(vocabularies) {
+VocabularySelectionDialog::VocabularySelectionDialog(const std::vector<Vocabulary> &vocabularies, 
+                                                   const ProfileScores &scores,
+                                                   const QString &profileName,
+                                                   QWidget *parent)
+    : QDialog(parent), practiceAll(false), selectedIndex(-1), vocabularies(vocabularies), scores(scores), profileName(profileName) {
     
     setWindowTitle("Select Vocabulary");
-    setFixedSize(400, 340);
+    resize(550, 400);
+    setMinimumSize(500, 300);
     
 #ifdef Q_OS_WIN
     setWindowIcon(QIcon(":/appicon.ico"));
 #else
     setWindowIcon(QIcon(":/appicon.png"));
 #endif
+    QPalette palette = this->palette();
+    QColor bgColor = palette.color(QPalette::Window);
+    QColor baseColor = palette.color(QPalette::Base);
 
+    QString bgColorHex = bgColor.name(); // Returns "#rrggbb" format
+    
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     
     // Title
@@ -29,12 +39,36 @@ VocabularySelectionDialog::VocabularySelectionDialog(const std::vector<Vocabular
     
     // Vocabulary selection
     QLabel *selectLabel = new QLabel("Choose a vocabulary:", this);
+    selectLabel->setStyleSheet("font-size: 14px; margin-bottom: 5px;");
     mainLayout->addWidget(selectLabel);
     
     vocabularyComboBox = new QComboBox(this);
-    for (const Vocabulary &vocab : vocabularies) {
-        vocabularyComboBox->addItem(QString("%1 (%2 words)").arg(vocab.name).arg(vocab.words.size()));
-    }
+    vocabularyComboBox->setStyleSheet(
+        "QComboBox {"
+        "    border: 2px solid #bdc3c7;"
+        "    border-radius: 8px;"
+        "    background-color: #" + bgColorHex + ";"
+        "    color: #2c3e50;"
+        "    padding: 8px;"
+        "    font-size: 12px;"
+        "    min-height: 20px;"
+        "}"
+        "QComboBox:hover {"
+        "    border: 2px solid #3498db;"
+        "}"
+        "QComboBox QAbstractItemView {"
+        "    border: 1px solid #bdc3c7;"
+        "    background-color: #" + bgColorHex + ";"
+        "    color: #2c3e50;"
+        "    selection-background-color: #3498db;"
+        "    selection-color: white;"
+        "}"
+    );
+    
+    populateVocabularyComboBox();
+    
+
+    
     mainLayout->addWidget(vocabularyComboBox);
     
     mainLayout->addSpacing(20);
@@ -93,15 +127,55 @@ VocabularySelectionDialog::VocabularySelectionDialog(const std::vector<Vocabular
     connect(practiceAllButton, &QPushButton::clicked, this, &VocabularySelectionDialog::onPracticeAllClicked);
     connect(backButton, &QPushButton::clicked, this, &VocabularySelectionDialog::onBackClicked);
     
+    // Connect combo box selection
+    connect(vocabularyComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), [this](int index) {
+        selectedIndex = index;
+        practiceButton->setEnabled(index >= 0);
+    });
+    
     // Enable/disable practice button based on selection
     practiceButton->setEnabled(!vocabularies.empty());
     practiceAllButton->setEnabled(!vocabularies.empty());
+    
+    // Select first item by default if available
+    if (!vocabularies.empty()) {
+        vocabularyComboBox->setCurrentIndex(0);
+        selectedIndex = 0;
+    }
 }
 
 void VocabularySelectionDialog::onPracticeClicked() {
     practiceAll = false;
     selectedIndex = vocabularyComboBox->currentIndex();
-    accept();
+    if (selectedIndex >= 0) {
+        accept();
+    }
+}
+
+void VocabularySelectionDialog::populateVocabularyComboBox() {
+    for (size_t i = 0; i < vocabularies.size(); ++i) {
+        const Vocabulary &vocab = vocabularies[i];
+        VocabularyScore score = VocabularyData::getProfileVocabularyScore(scores, profileName, vocab.name);
+        
+        // Create formatted text with scores
+        QString itemText = QString("%1 (%2 words)")
+                          .arg(vocab.name)
+                          .arg(vocab.words.size());
+        
+        QString scoreText = "";
+        if (score.bestRomajiPercent > 0 || score.bestEnglishPercent > 0) {
+            QStringList scoreParts;
+            if (score.bestRomajiPercent > 0) {
+                scoreParts << QString("📝 %1%").arg(QString::number(score.bestRomajiPercent, 'f', 1));
+            }
+            if (score.bestEnglishPercent > 0) {
+                scoreParts << QString("🇦🇺 %1%").arg(QString::number(score.bestEnglishPercent, 'f', 1));
+            }
+            scoreText = " - Best: " + scoreParts.join(", ");
+        }
+        
+        vocabularyComboBox->addItem(itemText + scoreText);
+    }
 }
 
 void VocabularySelectionDialog::onPracticeAllClicked() {

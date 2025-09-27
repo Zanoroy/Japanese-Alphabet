@@ -16,7 +16,7 @@ class VocabularyQuizWindow : public QWidget {
     Q_OBJECT
 
 public:
-    explicit VocabularyQuizWindow(const std::vector<VocabularyWord> &words, QWidget *parent = nullptr);
+    explicit VocabularyQuizWindow(const std::vector<VocabularyWord> &words, const QString &profileName, const QString &vocabularyName, const QString &scoresFilePath, QWidget *parent = nullptr);
     void resetQuiz();
 
 signals:
@@ -69,6 +69,11 @@ private:
     int correctEnglishCount;
     int incorrectEnglishCount;
     std::map<VocabularyWord*, int> incorrectWords; // Track incorrect attempts per word
+
+    // Profile and scoring data
+    QString profileName;
+    QString vocabularyName;
+    QString scoresFilePath;
 
     // Timer for message/error display
     QTimer *msgTimer;

@@ -37,7 +37,11 @@ int main(int argc, char *argv[])
     QDir().mkpath(profilesDir);
     QStringList profiles;
     for (const QString &file : QDir(profilesDir).entryList(QStringList() << "*.json", QDir::Files)) {
-        profiles << QFileInfo(file).baseName();
+        QString baseName = QFileInfo(file).baseName();
+        // Skip system files that are not user profiles
+        if (baseName != "vocabularies" && baseName != "vocabulary_scores") {
+            profiles << baseName;
+        }
     }
     ProfileDialog profileDialog(profiles);
     int dialogResult = profileDialog.exec();
@@ -83,8 +87,13 @@ int main(int argc, char *argv[])
                 continue;
             }
             
+            // Load profile scores
+            ProfileScores profileScores;
+            QString scoresFile = profilesDir + "/vocabulary_scores.json";
+            VocabularyData::loadProfileScores(scoresFile, profileScores);
+            
             // Show vocabulary selection dialog
-            VocabularySelectionDialog vocabDialog(vocabularies);
+            VocabularySelectionDialog vocabDialog(vocabularies, profileScores, profileName);
             if (vocabDialog.exec() == QDialog::Accepted) {
                 // Get selected vocabulary words
                 std::vector<VocabularyWord> wordsToQuiz;
@@ -101,8 +110,18 @@ int main(int argc, char *argv[])
                 }
                 
                 if (!wordsToQuiz.empty()) {
+                    // Determine vocabulary name for score tracking
+                    QString vocabName = "All Vocabularies";
+                    if (!vocabDialog.isPracticeAll()) {
+                        int selectedIndex = vocabDialog.getSelectedVocabularyIndex();
+                        if (selectedIndex >= 0 && selectedIndex < vocabularies.size()) {
+                            vocabName = vocabularies[selectedIndex].name;
+                        }
+                    }
+                    
                     // Start vocabulary quiz
-                    VocabularyQuizWindow *vocabQuiz = new VocabularyQuizWindow(wordsToQuiz);
+                    VocabularyQuizWindow *vocabQuiz = new VocabularyQuizWindow(
+                        wordsToQuiz, profileName, vocabName, scoresFile);
                     vocabQuiz->show();
                     vocabQuiz->setAttribute(Qt::WA_DeleteOnClose);
                     

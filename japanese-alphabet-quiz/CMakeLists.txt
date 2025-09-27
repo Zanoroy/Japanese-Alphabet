@@ -6,6 +6,10 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+# Compiler flags to work around GCC 14 strict type checking
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-template-id-cdtor -Wno-deprecated-declarations")
+add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x060000)
+
 find_package(Qt6 COMPONENTS Widgets REQUIRED)
 find_package(Qt6 COMPONENTS Core REQUIRED)
 find_package(Qt6 COMPONENTS Gui REQUIRED)

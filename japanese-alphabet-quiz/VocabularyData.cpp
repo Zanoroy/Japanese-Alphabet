@@ -3,6 +3,7 @@
 #include <QJsonParseError>
 #include <QFile>
 #include <QDebug>
+#include <algorithm>
 
 bool VocabularyData::loadVocabularies(const QString &filePath, std::vector<Vocabulary> &vocabularies) {
     vocabularies.clear();
@@ -152,4 +153,124 @@ QJsonObject VocabularyData::vocabularyToJson(const Vocabulary &vocab) {
     
     vocabObj["words"] = wordsArray;
     return vocabObj;
+}
+
+bool VocabularyData::loadProfileScores(const QString &filePath, ProfileScores &scores) {
+    scores.clear();
+    
+    QFile file(filePath);
+    if (!file.exists()) {
+        return true; // Empty scores file is valid
+    }
+    
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "Failed to open scores file:" << filePath;
+        return false;
+    }
+    
+    QByteArray data = file.readAll();
+    file.close();
+    
+    QJsonParseError parseError;
+    QJsonDocument doc = QJsonDocument::fromJson(data, &parseError);
+    
+    if (parseError.error != QJsonParseError::NoError) {
+        qDebug() << "JSON parse error in scores:" << parseError.errorString();
+        return false;
+    }
+    
+    if (!doc.isObject()) {
+        return true; // Empty/invalid file, start fresh
+    }
+    
+    QJsonObject root = doc.object();
+    for (auto profileIt = root.begin(); profileIt != root.end(); ++profileIt) {
+        QString profileName = profileIt.key();
+        if (profileIt.value().isObject()) {
+            QJsonObject profileObj = profileIt.value().toObject();
+            std::map<QString, VocabularyScore> profileScores;
+            
+            for (auto vocabIt = profileObj.begin(); vocabIt != profileObj.end(); ++vocabIt) {
+                QString vocabName = vocabIt.key();
+                if (vocabIt.value().isObject()) {
+                    VocabularyScore score = parseScore(vocabIt.value().toObject());
+                    profileScores[vocabName] = score;
+                }
+            }
+            scores[profileName] = profileScores;
+        }
+    }
+    
+    return true;
+}
+
+bool VocabularyData::saveProfileScores(const QString &filePath, const ProfileScores &scores) {
+    QJsonObject root;
+    
+    for (const auto &profilePair : scores) {
+        const QString &profileName = profilePair.first;
+        const auto &profileScores = profilePair.second;
+        
+        QJsonObject profileObj;
+        for (const auto &vocabPair : profileScores) {
+            const QString &vocabName = vocabPair.first;
+            const VocabularyScore &score = vocabPair.second;
+            
+            profileObj[vocabName] = scoreToJson(score);
+        }
+        root[profileName] = profileObj;
+    }
+    
+    QFile file(filePath);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qDebug() << "Failed to open scores file for writing:" << filePath;
+        return false;
+    }
+    
+    QJsonDocument doc(root);
+    file.write(doc.toJson(QJsonDocument::Indented));
+    file.close();
+    
+    return true;
+}
+
+VocabularyScore VocabularyData::getProfileVocabularyScore(const ProfileScores &scores, 
+                                                         const QString &profileName, 
+                                                         const QString &vocabularyName) {
+    auto profileIt = scores.find(profileName);
+    if (profileIt != scores.end()) {
+        auto vocabIt = profileIt->second.find(vocabularyName);
+        if (vocabIt != profileIt->second.end()) {
+            return vocabIt->second;
+        }
+    }
+    return VocabularyScore(); // Default (0.0, 0.0)
+}
+
+void VocabularyData::updateProfileVocabularyScore(ProfileScores &scores,
+                                                 const QString &profileName,
+                                                 const QString &vocabularyName,
+                                                 double romajiPercent,
+                                                 double englishPercent) {
+    VocabularyScore &score = scores[profileName][vocabularyName];
+    score.bestRomajiPercent = std::max(score.bestRomajiPercent, romajiPercent);
+    score.bestEnglishPercent = std::max(score.bestEnglishPercent, englishPercent);
+}
+
+QJsonObject VocabularyData::scoreToJson(const VocabularyScore &score) {
+    QJsonObject scoreObj;
+    scoreObj["bestRomajiPercent"] = score.bestRomajiPercent;
+    scoreObj["bestEnglishPercent"] = score.bestEnglishPercent;
+    return scoreObj;
+}
+
+VocabularyScore VocabularyData::parseScore(const QJsonObject &scoreObj) {
+    VocabularyScore score;
+    if (scoreObj.contains("bestRomajiPercent")) {
+        score.bestRomajiPercent = scoreObj["bestRomajiPercent"].toDouble();
+    }
+    if (scoreObj.contains("bestEnglishPercent")) {
+        score.bestEnglishPercent = scoreObj["bestEnglishPercent"].toDouble();
+    }
+    return score;
 }

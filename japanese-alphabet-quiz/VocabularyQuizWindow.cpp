@@ -6,13 +6,15 @@
 #include <QIcon>
 #include <algorithm>
 #include <random>
+#include <cstddef>
 
-VocabularyQuizWindow::VocabularyQuizWindow(const std::vector<VocabularyWord> &words, QWidget *parent)
+VocabularyQuizWindow::VocabularyQuizWindow(const std::vector<VocabularyWord> &words, const QString &profileName, const QString &vocabularyName, const QString &scoresFilePath, QWidget *parent)
     : QWidget(parent), vocabularyWords(words), currentWordIndex(0), 
       expectingRomaji(true), expectingEnglish(false), 
       correctRomajiCount(0), incorrectRomajiCount(0),
       correctEnglishCount(0), incorrectEnglishCount(0),
-      quizStarted(false) {
+      profileName(profileName), vocabularyName(vocabularyName), 
+      scoresFilePath(scoresFilePath), quizStarted(false) {
     
     // Shuffle the words for random order
     std::random_device rd;
@@ -422,6 +424,32 @@ void VocabularyQuizWindow::updateScore() {
 }
 
 void VocabularyQuizWindow::showResults() {
+    // Calculate percentages
+    double romajiPercent = 0.0;
+    double englishPercent = 0.0;
+    
+    if (expectingRomaji) {
+        int totalRomaji = correctRomajiCount + incorrectRomajiCount;
+        if (totalRomaji > 0) {
+            romajiPercent = (double(correctRomajiCount) / totalRomaji) * 100.0;
+        }
+    }
+    
+    if (expectingEnglish) {
+        int totalEnglish = correctEnglishCount + incorrectEnglishCount;
+        if (totalEnglish > 0) {
+            englishPercent = (double(correctEnglishCount) / totalEnglish) * 100.0;
+        }
+    }
+    
+    // Save scores if we have a vocabulary name (not "All Vocabularies")
+    if (!vocabularyName.isEmpty() && vocabularyName != "All Vocabularies") {
+        ProfileScores profileScores;
+        VocabularyData::loadProfileScores(scoresFilePath, profileScores);
+        VocabularyData::updateProfileVocabularyScore(profileScores, profileName, vocabularyName, romajiPercent, englishPercent);
+        VocabularyData::saveProfileScores(scoresFilePath, profileScores);
+    }
+    
     // Show results dialog
     VocabularyResultsDialog resultsDialog(
         expectingRomaji,
