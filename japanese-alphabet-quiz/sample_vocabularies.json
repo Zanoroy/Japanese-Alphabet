@@ -7,87 +7,103 @@
           "japanese": "わたし",
           "romaji": "watashi",
           "english": "I",
-          "kanji": "私"
+          "kanji": "私",
+          "hint": "Used by the speaker to refer to themselves"
         },
         {
           "japanese": "あなた",
           "romaji": "anata",
           "english": "you",
-          "kanji": ""
+          "kanji": "",
+          "hint": "Used by the speaker to refer to the listener"
         },
         {
           "romaji": "ano hito",
           "japanese": "あの ひと",
           "kanji": "あの人",
-          "english": "that person"
+          "english": "that person",
+          "hint": "Used to refer to a person not present"
         },
         {
           "romaji": "ano kata",
           "japanese": "あの かた",
           "kanji": "あの方",
           "english": "that person",
-          "comment": "polite version of 'that person'"
+          "comment": "polite version of 'that person'",
+          "hint": "Used to refer to a person not present (polite)"
         },
         {
           "romaji": "san",
           "japanese": "さん",
-          "english": "Mr/Ms suffix"
+          "english": "Mr/Ms",
+          "hint": "Used after a person's name"
         },
         {
           "romaji": "chan",
           "japanese": "ちゃん",
-          "english": "child suffix"
+          "english": "child",
+          "hint": "Used after a child's name"
         },
         {
           "romaji": "jin",
           "japanese": "じん",
-          "english": "nationality suffix",
-          "comment": "e.g., Australia-jin - Australian person"
+          "english": "nationality",
+          "comment": "e.g., Australia-jin - Australian person",
+          "hint": "にほん-じん means Japanese person"
         },
         {
           "romaji": "sensei",
           "japanese": "せんせい",
-          "english": "teacher"
+          "english": "teacher",
+          "hint": "Title for someone who guides or instructs others."
         },
         {
           "romaji": "kyoshi",
           "japanese": "きょうし",
-          "english": "teacher"
+          "english": "teacher",
+          "hint": "Used when referring to 'せんせい' in a professional context."
         },
         {
           "romaji": "gakusei",
           "japanese": "がくせい",
-          "english": "student"
+          "english": "student",
+          "hint": "Used to refer to someone who is studying."
         },
         {
           "romaji": "shain",
           "japanese": "しゃいん",
-          "english": "company employee"
+          "english": "company employee",
+          "hint": "Used to refer to an employee of a company."
         },
         {
           "romaji": "ginkoin",
           "japanese": "ぎんこういん",
-          "english": "bank employee"
+          "english": "bank employee",
+          "hint": "Used to refer to an employee of a bank."
         },
         {
           "romaji": "isha",
           "japanese": "いしゃ",
-          "english": "doctor"
+          "english": "doctor",
+          "hint": "Used to refer to a medical professional."
         },
         {
           "romaji": "kenkyusha",
           "japanese": "けんきゅうしゃ",
-          "english": "researcher"
+          "english": "researcher",
+          "hint": "Used to refer to someone who conducts research."
         },
         {
           "romaji": "daigaku",
           "japanese": "だいがく",
-          "english": "university"
+          "english": "university",
+          "hint": "An institution of higher education."
         },
         {
           "romaji": "byoin",
           "japanese": "びょういん",
-          "english": "hospital"
+          "english": "hospital",
+          "hint": "Used to refer to a medical facility."
         },
         {
           "romaji": "dare",
@@ -97,45 +113,52 @@
         {
           "romaji": "sai",
           "japanese": "さい",
-          "english": "years old"
+          "english": "years old",
+          "comment": "used when telling someone's age"
         },
         {
           "romaji": "nan-sai",
           "japanese": "なんさい",
-          "english": "how old"
+          "english": "how old",
+          "comment": "used when asking someone's age"
         },
         {
           "romaji": "hai",
           "japanese": "はい",
-          "english": "yes"
+          "english": "yes",
+          "comment": "used to express agreement"
         },
         {
           "romaji": "iie",
           "japanese": "いいえ",
-          "english": "no"
+          "english": "no",
+          "comment": "used to express disagreement"
         },
         {
           "romaji": "hajimemashite",
           "japanese": "はじめまして",
-          "english": "nice to meet you"
-        },
-        {
-          "romaji": "~kara kimashita",
-          "japanese": "から きました",
-          "english": "I come from ~",
-          "comment": "e.g., Australia kara kimashita - I come from Australia"
+          "english": "nice to meet you",
+          "comment": "used when meeting someone for the first time"
         },
         {
           "romaji": "dozo yoroshiku",
           "japanese": "[どうぞ] よろしく",
           "english": "nice to meet you",
-          "comment": "used at the end of self-introduction (polite)"
+          "comment": "used at the end of self-introduction (polite)",
+          "hint": "Often used after 'はじめまして' to express pleasure in meeting someone."
+        },
+        {
+          "romaji": "~kara kimashita",
+          "japanese": "から きました",
+          "english": "I come from",
+          "comment": "e.g., Australia kara kimashita - I come from Australia"
         },
         {
           "romaji": "onegai shimasu",
           "japanese": "[おねがいします]",
           "english": "please",
-          "comment": "more polite than onegai"
+          "comment": "more polite than おねがい",
+          "hint": "Used when making a polite request."
         },
         {
           "romaji": "shitsurei desu ga",
@@ -146,14 +169,16 @@
         {
           "romaji": "onamae wa?",
           "japanese": "おなまえは",
-          "english": "May I have your name?",
-          "comment": "polite"
+          "english": "May I have your name",
+          "comment": "polite",
+          "hint": "Used when asking for someone's name."
         },
         {
           "romaji": "kochira wa ~san desu",
-          "japanese": "こちらは ~さん です",
+          "japanese": "こちら は ~さん です",
           "english": "This is Mr/Ms",
-          "comment": "used to introduce someone"
+          "comment": "used to introduce someone",
+          "hint": "Used when introducing someone else."
         }
       ]
     },
@@ -391,7 +416,7 @@
           "comment": ""
         },
         {
-          "romaji": "-go",
+          "romaji": "go",
           "japanese": "ご",
           "kanji": "語",
           "english": "language",
@@ -665,24 +690,6 @@
           "english": "white"
         }
       ]
-    },
-    {
-      "Vocabulary": "Test Entries",
-      "words": [
-         {
-          "romaji": "ano kata",
-          "japanese": "あの かた",
-          "kanji": "あの方",
-          "english": "that person",
-          "comment": "polite version of 'that person'"
-        },
-        {
-          "romaji": "jin",
-          "japanese": "じん",
-          "english": "nationality suffix",
-          "comment": "e.g., Australia-jin - Australian person"
-        }
-     ]
     }
   ]
 }

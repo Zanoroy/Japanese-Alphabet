@@ -1,11 +1,15 @@
 #!/usr/bin/env xdg-open
 [Desktop Entry]
-Version=1.0
-Type=Application
-Name=Japanese Alphabet Quiz
-Comment=Japanese Alphabet Quiz Application
-Exec='/home/brucequinton/Projects/Japanese Alphabet/japanese-alphabet-quiz/build/japanese-alphabet-quiz'
-Icon='/home/brucequinton/Projects/Japanese Alphabet/japanese-alphabet-quiz/appicon.png'
-Terminal=false
 Categories=Education;Languages;Qt;
+Comment=Japanese Learning Application
+Exec='/opt/japanese-learning/japanese-alphabet-quiz'
+Icon=/opt/japanese-learning/appicon.png
+Name=Japanese Learning
+NoDisplay=false
+Path=/opt/japanese-learning/
+StartupNotify=true
 StartupWMClass=japanese-alphabet-quiz
+Terminal=false
+TerminalOptions=
+Type=Application
+Version=1.0

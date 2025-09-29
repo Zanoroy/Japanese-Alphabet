@@ -43,27 +43,27 @@ VocabularySelectionDialog::VocabularySelectionDialog(const std::vector<Vocabular
     mainLayout->addWidget(selectLabel);
     
     vocabularyComboBox = new QComboBox(this);
-    vocabularyComboBox->setStyleSheet(
-        "QComboBox {"
-        "    border: 2px solid #bdc3c7;"
-        "    border-radius: 8px;"
-        "    background-color: #" + bgColorHex + ";"
-        "    color: #2c3e50;"
-        "    padding: 8px;"
-        "    font-size: 12px;"
-        "    min-height: 20px;"
-        "}"
-        "QComboBox:hover {"
-        "    border: 2px solid #3498db;"
-        "}"
-        "QComboBox QAbstractItemView {"
-        "    border: 1px solid #bdc3c7;"
-        "    background-color: #" + bgColorHex + ";"
-        "    color: #2c3e50;"
-        "    selection-background-color: #3498db;"
-        "    selection-color: white;"
-        "}"
-    );
+    // vocabularyComboBox->setStyleSheet(
+    //     "QComboBox {"
+    //     "    border: 2px solid #bdc3c7;"
+    //     "    border-radius: 8px;"
+    //     "    background-color: " + bgColorHex + ";"
+    //     "    color: #ffffff;"
+    //     "    padding: 8px;"
+    //     "    font-size: 12px;"
+    //     "    min-height: 20px;"
+    //     "}"
+    //     "QComboBox:hover {"
+    //     "    border: 2px solid #3498db;"
+    //     "}"
+    //     "QComboBox QAbstractItemView {"
+    //     "    border: 1px solid #bdc3c7;"
+    //     "    background-color: " + bgColorHex + ";"
+    //     "    color: #ffffff;"
+    //     "    selection-background-color: #3498db;"
+    //     "    selection-color: white;"
+    //     "}"
+    // );
     
     populateVocabularyComboBox();
     
