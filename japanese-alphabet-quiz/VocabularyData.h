@@ -19,6 +19,7 @@ struct VocabularyWord {
     QString kanji; // Optional kanji representation
     QString english;
     QString comment; // Optional comment for additional info
+    QString hint; // Optional hint to assist the user
 };
 
 struct VocabularyScore {
