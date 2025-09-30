@@ -86,8 +86,6 @@ private:
     QString vocabularyName;
     QString scoresFilePath;
 
-    // Timer for message/error display
-    QTimer *msgTimer;
     int messageDuration; // Duration to show messages in seconds
     bool quizStarted;
     bool showCommentsOnCorrect { true };

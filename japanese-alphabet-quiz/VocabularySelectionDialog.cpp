@@ -11,9 +11,7 @@ VocabularySelectionDialog::VocabularySelectionDialog(const std::vector<Vocabular
     : QDialog(parent), practiceAll(false), selectedIndex(-1), vocabularies(vocabularies), scores(scores), profileName(profileName), initialMessageDurationSeconds(initialMessageDurationSeconds) {
     
     setWindowTitle("Select Vocabulary");
-    resize(550, 450);
-    setMinimumSize(550, 425);
-    
+    setFixedSize(550, 450);
 #ifdef Q_OS_WIN
     setWindowIcon(QIcon(":/appicon.ico"));
 #else

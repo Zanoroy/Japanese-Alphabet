@@ -28,15 +28,11 @@ VocabularyQuizWindow::VocabularyQuizWindow(const std::vector<VocabularyWord> &wo
     std::shuffle(vocabularyWords.begin(), vocabularyWords.end(), g);
     
     setupUI();
-    
-    msgTimer = new QTimer(this);
-    msgTimer->setSingleShot(true);
-    connect(msgTimer, &QTimer::timeout, this, &VocabularyQuizWindow::onMessageTimeout);
 }
 
 void VocabularyQuizWindow::setupUI() {
     setWindowTitle("Vocabulary Quiz");
-    setGeometry(200, 200, 500, 400);
+    setGeometry(200, 200, 500, 250);
     
 #ifdef Q_OS_WIN
     setWindowIcon(QIcon(":/appicon.ico"));
