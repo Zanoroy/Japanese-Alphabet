@@ -1,5 +1,6 @@
 #include "VocabularyQuizWindow.h"
 #include "VocabularyResultsDialog.h"
+#include "FeedbackDialog.h"
 #include <QFont>
 #include <QApplication>
 #include <QMessageBox>
@@ -7,14 +8,19 @@
 #include <algorithm>
 #include <random>
 #include <cstddef>
+#include <QFile>
+#include <QDir>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonParseError>
 
-VocabularyQuizWindow::VocabularyQuizWindow(const std::vector<VocabularyWord> &words, const QString &profileName, const QString &vocabularyName, const QString &scoresFilePath, QWidget *parent)
+VocabularyQuizWindow::VocabularyQuizWindow(const std::vector<VocabularyWord> &words, const QString &profileName, const QString &vocabularyName, const QString &scoresFilePath, const int messageDuration,QWidget *parent)
     : QWidget(parent), vocabularyWords(words), currentWordIndex(0), 
       expectingRomaji(true), expectingEnglish(false), 
       correctRomajiCount(0), incorrectRomajiCount(0),
-      correctEnglishCount(0), incorrectEnglishCount(0),
+      correctEnglishCount(0), incorrectEnglishCount(0), hintCount(0),
       profileName(profileName), vocabularyName(vocabularyName), 
-      scoresFilePath(scoresFilePath), quizStarted(false) {
+      scoresFilePath(scoresFilePath), quizStarted(false), messageDuration(messageDuration) {
     
     // Shuffle the words for random order
     std::random_device rd;
@@ -25,7 +31,7 @@ VocabularyQuizWindow::VocabularyQuizWindow(const std::vector<VocabularyWord> &wo
     
     msgTimer = new QTimer(this);
     msgTimer->setSingleShot(true);
-    connect(msgTimer, &QTimer::timeout, this, &VocabularyQuizWindow::hideErrorMessage);
+    connect(msgTimer, &QTimer::timeout, this, &VocabularyQuizWindow::onMessageTimeout);
 }
 
 void VocabularyQuizWindow::setupUI() {
@@ -40,14 +46,25 @@ void VocabularyQuizWindow::setupUI() {
 
     mainLayout = new QVBoxLayout(this);
     
-    // Title
+    // Title row with settings button
+    QHBoxLayout *titleRow = new QHBoxLayout();
+    settingsButton = new QToolButton(this);
+    settingsButton->setText("⚙");
+    settingsButton->setToolTip("Quiz settings");
+    settingsButton->setPopupMode(QToolButton::InstantPopup);
+    settingsButton->setStyleSheet("QToolButton { font-size: 16px; padding: 4px 8px; } QToolButton::menu-indicator { image: none; }");
+
     titleLabel = new QLabel("Vocabulary Quiz Setup", this);
     QFont titleFont;
     titleFont.setPointSize(18);
     titleFont.setBold(true);
     titleLabel->setFont(titleFont);
     titleLabel->setAlignment(Qt::AlignCenter);
-    mainLayout->addWidget(titleLabel);
+    titleRow->addWidget(settingsButton, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    titleRow->addStretch();
+    titleRow->addWidget(titleLabel, 1);
+    titleRow->addStretch();
+    mainLayout->addLayout(titleRow);
     
     mainLayout->addSpacing(20);
     
@@ -104,6 +121,11 @@ void VocabularyQuizWindow::setupUI() {
     answerInput->setStyleSheet("font-size: 16px; padding: 8px;");
     answerInput->hide();
     mainLayout->addWidget(answerInput);
+    // Event filter to allow early dismissal of messages when typing
+    answerInput->installEventFilter(this);
+    
+    // Create horizontal layout for buttons
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
     
     checkButton = new QPushButton("Check Answer", this);
     checkButton->setStyleSheet(
@@ -120,21 +142,35 @@ void VocabularyQuizWindow::setupUI() {
         "}"
     );
     checkButton->hide();
-    mainLayout->addWidget(checkButton);
     
-    // Error/feedback label
-    errorLabel = new QLabel("", this);
-    errorLabel->setAlignment(Qt::AlignCenter);
-    errorLabel->setStyleSheet("color: red; font-size: 14px; font-weight: bold; padding: 10px;");
-    errorLabel->setMinimumHeight(30);
-    mainLayout->addWidget(errorLabel);
+    hintButton = new QPushButton("Hint", this);
+    hintButton->setStyleSheet(
+        "QPushButton {"
+        "    font-size: 12px;"
+        "    padding: 8px 16px;"
+        "    background-color: #3498db;"
+        "    color: black;"
+        "    border: none;"
+        "    border-radius: 6px;"
+        "    margin-left: 10px;"
+        "}"
+        "QPushButton:hover {"
+        "    background-color: #2980b9;"
+        "}"
+        "QPushButton:disabled {"
+        "    background-color: #bdc3c7;"
+        "    color: #7f8c8d;"
+        "}"
+    );
+    hintButton->hide();
     
-    // Comment label
-    commentLabel = new QLabel("", this);
-    commentLabel->setAlignment(Qt::AlignCenter);
-    commentLabel->setStyleSheet("font-size: 12px; font-weight: bold; padding: 10px;");
-    commentLabel->setMinimumHeight(30);
-    mainLayout->addWidget(commentLabel);
+    buttonLayout->addWidget(checkButton);
+    buttonLayout->addWidget(hintButton);
+    buttonLayout->addStretch(); // Push buttons to the left
+    
+    mainLayout->addLayout(buttonLayout);
+    
+    // (Inline feedback labels removed; using modal feedback dialog)
 
     // Score label
     scoreLabel = new QLabel("", this);
@@ -168,8 +204,37 @@ void VocabularyQuizWindow::setupUI() {
     connect(englishCheckbox, &QCheckBox::checkStateChanged, this, &VocabularyQuizWindow::onEnglishCheckboxChanged);
     connect(startButton, &QPushButton::clicked, this, &VocabularyQuizWindow::onStartClicked);
     connect(checkButton, &QPushButton::clicked, this, &VocabularyQuizWindow::onCheckAnswer);
+    connect(hintButton, &QPushButton::clicked, this, &VocabularyQuizWindow::onHintClicked);
     connect(answerInput, &QLineEdit::returnPressed, this, &VocabularyQuizWindow::onCheckAnswer);
     connect(backButton, &QPushButton::clicked, this, &QWidget::close);
+
+    // Settings menu
+    settingsMenu = new QMenu(this);
+    toggleCommentsAction = settingsMenu->addAction("Show comments after correct answers");
+    toggleCommentsAction->setCheckable(true);
+    toggleCommentsAction->setChecked(showCommentsOnCorrect);
+    connect(toggleCommentsAction, &QAction::toggled, this, [this](bool checked){
+        showCommentsOnCorrect = checked;
+        // Persist immediately to profile JSON
+        QFile profileFile(QDir::currentPath() + "/profiles/" + profileName + ".json");
+        QJsonObject obj;
+        if (profileFile.open(QIODevice::ReadOnly)) {
+            QByteArray data = profileFile.readAll();
+            profileFile.close();
+            QJsonParseError parseError; 
+            QJsonDocument doc = QJsonDocument::fromJson(data, &parseError);
+            if (parseError.error == QJsonParseError::NoError && doc.isObject()) {
+                obj = doc.object();
+            }
+        }
+        obj["showCommentsOnCorrect"] = checked;
+        if (profileFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+            QJsonDocument outDoc(obj);
+            profileFile.write(outDoc.toJson(QJsonDocument::Indented));
+            profileFile.close();
+        }
+    });
+    settingsButton->setMenu(settingsMenu);
 }
 
 void VocabularyQuizWindow::onRomajiCheckboxChanged(int state) {
@@ -208,6 +273,7 @@ void VocabularyQuizWindow::onStartClicked() {
     questionLabel->show();
     answerInput->show();
     checkButton->show();
+    hintButton->show();
     scoreLabel->show();
     
     quizStarted = true;
@@ -231,8 +297,10 @@ void VocabularyQuizWindow::showNextWord() {
     questionLabel->setText(word.japanese);
     answerInput->clear();
     answerInput->setFocus();
-    errorLabel->clear();
-    commentLabel->clear();
+    // (No inline labels to clear)
+
+    // Enable/disable hint button based on whether the current word has a hint
+    hintButton->setEnabled(!word.hint.isEmpty());
 
     // Update title based on what we're expecting
     if (expectingRomaji && expectingEnglish) {
@@ -261,8 +329,10 @@ void VocabularyQuizWindow::onCheckAnswer() {
         if(userInput.isEmpty()) {
             incorrectEnglishCount++;
             incorrectRomajiCount++;
-            showError("Please enter both romaji and english separated by comma", 
-                      QString("%1, %2").arg(currentWord.romaji, currentWord.english), currentWord.comment);
+            // "Please enter both romaji and english separated by comma",
+            showError(QString("<span style='color:#e74c3c;'>%1</span>, <span style='color:#e74c3c;'>%2</span>")
+                          .arg(currentWord.romaji, currentWord.english),
+                      currentWord.comment);
             return;
         } else {
             QStringList parts = userInput.split(',');
@@ -288,11 +358,12 @@ void VocabularyQuizWindow::onCheckAnswer() {
             } else {
                 QString errorMsg;
                 if (!romajiCorrect && !englishCorrect) {
-                    errorMsg = QString("Correct: %1, %2").arg(currentWord.romaji, currentWord.english);
+                    errorMsg = QString("Correct: <span style='color:#e74c3c;'>%1</span>, <span style='color:#e74c3c;'>%2</span>")
+                                   .arg(currentWord.romaji, currentWord.english);
                 } else if (!romajiCorrect) {
-                    errorMsg = QString("Romaji should be: %1").arg(currentWord.romaji);
+                    errorMsg = QString("Romaji should be: <span style='color:#e74c3c;'>%1</span>").arg(currentWord.romaji);
                 } else {
-                    errorMsg = QString("English should be: %1").arg(currentWord.english);
+                    errorMsg = QString("English should be: <span style='color:#e74c3c;'>%1</span>").arg(currentWord.english);
                 }
                 showError(errorMsg, currentWord.comment);
             }
@@ -306,15 +377,37 @@ void VocabularyQuizWindow::onCheckAnswer() {
     }
     
     if (correct) {
-        currentWordIndex++;
-        if(!currentWord.comment.isEmpty()) {
-          showComment(currentWord.comment);
-        } else {
-          QTimer::singleShot(200, this, &VocabularyQuizWindow::showNextWord);
-        }
+                if(!currentWord.comment.isEmpty() && showCommentsOnCorrect) {
+                    showComment(currentWord.comment); // increments index after dismissal
+                } else {
+                    currentWordIndex++;
+                    QTimer::singleShot(200, this, &VocabularyQuizWindow::showNextWord);
+                }
     } else {
         incorrectWords[const_cast<VocabularyWord*>(&currentWord)]++;
     }
+}
+
+void VocabularyQuizWindow::onHintClicked() {
+    if (currentWordIndex >= vocabularyWords.size()) return;
+    
+    const VocabularyWord &currentWord = vocabularyWords[currentWordIndex];
+    
+    // Check if the current word has a hint
+    if (currentWord.hint.isEmpty()) {
+        return; // Button should be disabled, but just in case
+    }
+    
+    // Increment hint counter
+    hintCount++;
+    
+    // Show hint dialog
+    QMessageBox hintDialog;
+    hintDialog.setWindowTitle("Hint");
+    hintDialog.setText(currentWord.hint);
+    hintDialog.setIcon(QMessageBox::Information);
+    hintDialog.setStandardButtons(QMessageBox::Ok);
+    hintDialog.exec();
 }
 
 void VocabularyQuizWindow::checkRomajiAnswer() {
@@ -324,12 +417,12 @@ void VocabularyQuizWindow::checkRomajiAnswer() {
     
     if (userInput == correctRomaji) {
         correctRomajiCount++;
-        currentWordIndex++;
-        if(!currentWord.comment.isEmpty()) {
-          showComment(currentWord.comment);
-        } else {
-          QTimer::singleShot(200, this, &VocabularyQuizWindow::showNextWord);
-        }
+                if(!currentWord.comment.isEmpty() && showCommentsOnCorrect) {
+                    showComment(currentWord.comment); // increments index after dismissal
+                } else {
+                    currentWordIndex++;
+                    QTimer::singleShot(200, this, &VocabularyQuizWindow::showNextWord);
+                }
     } else {
         incorrectRomajiCount++;
         incorrectWords[const_cast<VocabularyWord*>(&currentWord)]++;
@@ -354,12 +447,12 @@ void VocabularyQuizWindow::checkEnglishAnswer() {
     
     if (userInput == correctEnglish) {
         correctEnglishCount++;
-        currentWordIndex++;        
-        if(!currentWord.comment.isEmpty()) {
-          showComment(currentWord.comment);
-        } else {
-          QTimer::singleShot(200, this, &VocabularyQuizWindow::showNextWord);
-        }
+                if(!currentWord.comment.isEmpty() && showCommentsOnCorrect) {
+                    showComment(currentWord.comment); // increments index after dismissal
+                } else {
+                    currentWordIndex++;
+                    QTimer::singleShot(200, this, &VocabularyQuizWindow::showNextWord);
+                }
     } else {
         incorrectEnglishCount++;
         incorrectWords[const_cast<VocabularyWord*>(&currentWord)]++;
@@ -368,42 +461,33 @@ void VocabularyQuizWindow::checkEnglishAnswer() {
 }
 
 void VocabularyQuizWindow::showComment(const QString &comment) {
-    if (!comment.isEmpty()) {
-        commentLabel->setText(comment);
-    }
-
-    msgTimer->start(2000); // Show for 2 seconds
-
-    // Move to next word after showing error
-    QTimer::singleShot(2000, this, [this]() {
-        currentWordIndex++;
-        showNextWord();
-    });
+    QString primary = QString("Correct ✅");
+    FeedbackDialog dlg(primary, comment, messageDuration, this);
+    dlg.exec();
+    currentWordIndex++; // advance once after dialog dismissed or auto-closed
+    showNextWord();
 }
 
-void VocabularyQuizWindow::showError(const QString &message, const QString &correctAnswer, const QString &comment) {
-    if (!correctAnswer.isEmpty()) {
-        errorLabel->setText(correctAnswer);
-    } else {
-        errorLabel->setText(message);
-    }
-
-    if (!correctAnswer.isEmpty()) {
-        commentLabel->setText(comment);
-    }
-
-    msgTimer->start(2000); // Show for 2 seconds
-
-    // Move to next word after showing error
-    QTimer::singleShot(2000, this, [this]() {
-        currentWordIndex++;
-        showNextWord();
-    });
+void VocabularyQuizWindow::showError(const QString &correctAnswer, const QString &comment) {
+    QString primary = correctAnswer.isEmpty()
+                           ? QString("<span style='color:#e74c3c;'>Incorrect ❌</span>")
+                           : correctAnswer;
+    FeedbackDialog dlg(primary, comment, messageDuration, this);
+    dlg.exec();
+    currentWordIndex++; // advance once after dialog dismissed or auto-closed
+    showNextWord();
 }
 
 void VocabularyQuizWindow::hideErrorMessage() {
-    errorLabel->clear();
-    commentLabel->clear();
+    // (No inline labels)
+}
+
+void VocabularyQuizWindow::advanceAfterMessage() {
+    // Not used with dialog approach
+}
+
+void VocabularyQuizWindow::onMessageTimeout() {
+    // Not used with dialog approach
 }
 
 void VocabularyQuizWindow::updateScore() {
@@ -458,6 +542,7 @@ void VocabularyQuizWindow::showResults() {
         incorrectRomajiCount,
         correctEnglishCount,
         incorrectEnglishCount,
+        hintCount,
         incorrectWords,
         this
     );
@@ -485,10 +570,10 @@ void VocabularyQuizWindow::resetQuiz() {
     questionLabel->hide();
     answerInput->hide();
     checkButton->hide();
+    hintButton->hide();
     scoreLabel->hide();
     backButton->hide();
-    errorLabel->clear();
-    commentLabel->clear();
+    // (No inline labels)
     
     // Show setup UI
     titleLabel->setText("Vocabulary Quiz Setup");
@@ -505,10 +590,19 @@ void VocabularyQuizWindow::resetQuiz() {
     // Reset statistics
     correctRomajiCount = incorrectRomajiCount = 0;
     correctEnglishCount = incorrectEnglishCount = 0;
+    hintCount = 0;
     incorrectWords.clear();
     
     // Shuffle words again for new quiz
     std::random_device rd;
     std::mt19937 g(rd());
     std::shuffle(vocabularyWords.begin(), vocabularyWords.end(), g);
+}
+
+bool VocabularyQuizWindow::eventFilter(QObject *obj, QEvent *event) {
+    if (obj == answerInput && event->type() == QEvent::KeyPress) {
+        // If any message text is present and timer active, advance immediately
+        // With dialog approach, no early dismissal needed here
+    }
+    return QWidget::eventFilter(obj, event);
 }

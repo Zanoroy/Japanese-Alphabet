@@ -9,6 +9,9 @@
 #include <QPushButton>
 #include <QCheckBox>
 #include <QTimer>
+#include <QMessageBox>
+#include <QToolButton>
+#include <QMenu>
 #include <map>
 #include "VocabularyData.h"
 
@@ -16,7 +19,8 @@ class VocabularyQuizWindow : public QWidget {
     Q_OBJECT
 
 public:
-    explicit VocabularyQuizWindow(const std::vector<VocabularyWord> &words, const QString &profileName, const QString &vocabularyName, const QString &scoresFilePath, QWidget *parent = nullptr);
+    explicit VocabularyQuizWindow(const std::vector<VocabularyWord> &words, const QString &profileName, const QString &vocabularyName, const QString &scoresFilePath, int messageDuration = 2, QWidget *parent = nullptr);
+    void setShowCommentsOnCorrect(bool enabled) { showCommentsOnCorrect = enabled; }
     void resetQuiz();
 
 signals:
@@ -28,18 +32,22 @@ private slots:
     void onEnglishCheckboxChanged(int state);
     void onStartClicked();
     void onCheckAnswer();
+    void onHintClicked();
     void hideErrorMessage();
     void showNextWord();
+    void onMessageTimeout();
 
 private:
+    bool eventFilter(QObject *obj, QEvent *event) override;
     void setupUI();
     void updateCheckboxStates();
     void checkRomajiAnswer();
     void checkEnglishAnswer();
-    void showError(const QString &message, const QString &correctAnswer = "", const QString &comment = "");
+    void showError(const QString &correctAnswer = "", const QString &comment = "");
     void showComment(const QString &comment);
     void updateScore();
     void showResults();
+    void advanceAfterMessage();
 
     // UI elements
     QVBoxLayout *mainLayout;
@@ -52,10 +60,12 @@ private:
     QLabel *instructionLabel;
     QLineEdit *answerInput;
     QPushButton *checkButton;
-    QLabel *errorLabel;
-    QLabel *commentLabel;
+    QPushButton *hintButton;
     QLabel *scoreLabel;
     QPushButton *backButton;
+    QToolButton *settingsButton;
+    QMenu *settingsMenu;
+    QAction *toggleCommentsAction;
 
     // Quiz data
     std::vector<VocabularyWord> vocabularyWords;
@@ -68,6 +78,7 @@ private:
     int incorrectRomajiCount;
     int correctEnglishCount;
     int incorrectEnglishCount;
+    int hintCount; // Track hints used during quiz
     std::map<VocabularyWord*, int> incorrectWords; // Track incorrect attempts per word
 
     // Profile and scoring data
@@ -77,7 +88,9 @@ private:
 
     // Timer for message/error display
     QTimer *msgTimer;
+    int messageDuration; // Duration to show messages in seconds
     bool quizStarted;
+    bool showCommentsOnCorrect { true };
 };
 
 #endif // VOCABULARYQUIZWINDOW_H

@@ -6,12 +6,13 @@
 VocabularySelectionDialog::VocabularySelectionDialog(const std::vector<Vocabulary> &vocabularies, 
                                                    const ProfileScores &scores,
                                                    const QString &profileName,
+                                                   int initialMessageDurationSeconds,
                                                    QWidget *parent)
-    : QDialog(parent), practiceAll(false), selectedIndex(-1), vocabularies(vocabularies), scores(scores), profileName(profileName) {
+    : QDialog(parent), practiceAll(false), selectedIndex(-1), vocabularies(vocabularies), scores(scores), profileName(profileName), initialMessageDurationSeconds(initialMessageDurationSeconds) {
     
     setWindowTitle("Select Vocabulary");
-    resize(550, 400);
-    setMinimumSize(500, 300);
+    resize(550, 450);
+    setMinimumSize(550, 425);
     
 #ifdef Q_OS_WIN
     setWindowIcon(QIcon(":/appicon.ico"));
@@ -36,6 +37,16 @@ VocabularySelectionDialog::VocabularySelectionDialog(const std::vector<Vocabular
     mainLayout->addWidget(titleLabel);
     
     mainLayout->addSpacing(20);
+
+    // Show comments on correct answers
+    showCommentsOnCorrectCheckBox = new QCheckBox("Show comments after correct answers", this);
+    showCommentsOnCorrectCheckBox->setChecked(initialShowCommentsOnCorrect);
+    showCommentsOnCorrectCheckBox->setToolTip("If unchecked, comments will only appear after incorrect answers.");
+    mainLayout->addWidget(showCommentsOnCorrectCheckBox);
+    QLabel *commentsInfo = new QLabel("(Uncheck to hide extra commentary when you are correct)", this);
+    commentsInfo->setStyleSheet("font-size: 11px; color: #7f8c8d; font-style: italic;");
+    mainLayout->addWidget(commentsInfo);
+    mainLayout->addSpacing(10);
     
     // Vocabulary selection
     QLabel *selectLabel = new QLabel("Choose a vocabulary:", this);
@@ -43,33 +54,55 @@ VocabularySelectionDialog::VocabularySelectionDialog(const std::vector<Vocabular
     mainLayout->addWidget(selectLabel);
     
     vocabularyComboBox = new QComboBox(this);
-    // vocabularyComboBox->setStyleSheet(
-    //     "QComboBox {"
-    //     "    border: 2px solid #bdc3c7;"
-    //     "    border-radius: 8px;"
-    //     "    background-color: " + bgColorHex + ";"
-    //     "    color: #ffffff;"
-    //     "    padding: 8px;"
-    //     "    font-size: 12px;"
-    //     "    min-height: 20px;"
-    //     "}"
-    //     "QComboBox:hover {"
-    //     "    border: 2px solid #3498db;"
-    //     "}"
-    //     "QComboBox QAbstractItemView {"
-    //     "    border: 1px solid #bdc3c7;"
-    //     "    background-color: " + bgColorHex + ";"
-    //     "    color: #ffffff;"
-    //     "    selection-background-color: #3498db;"
-    //     "    selection-color: white;"
-    //     "}"
-    // );
-    
+
     populateVocabularyComboBox();
     
-
-    
     mainLayout->addWidget(vocabularyComboBox);
+    
+    mainLayout->addSpacing(15);
+    
+    // Message duration setting
+    QLabel *durationLabel = new QLabel("Error/Comment Display Duration:", this);
+    durationLabel->setStyleSheet("font-size: 14px; margin-bottom: 5px;");
+    mainLayout->addWidget(durationLabel);
+    
+    QHBoxLayout *durationLayout = new QHBoxLayout();
+    messageDurationSpinBox = new QSpinBox(this);
+    messageDurationSpinBox->setRange(1, 10); // 1 to 10 seconds
+    messageDurationSpinBox->setSingleStep(1);
+    if (initialMessageDurationSeconds < 1) initialMessageDurationSeconds = 1;
+    if (initialMessageDurationSeconds > 10) initialMessageDurationSeconds = 10;
+    messageDurationSpinBox->setValue(initialMessageDurationSeconds); // Use stored preference
+    messageDurationSpinBox->setSuffix(" seconds");
+    messageDurationSpinBox->setStyleSheet(
+        "QSpinBox {"
+        "    border: 2px solid #bdc3c7;"
+        "    border-radius: 6px;"
+        "    padding: 5px;"
+        "    font-size: 12px;"
+        "    min-width: 100px;"
+        "}"
+        "QSpinBox:hover {"
+        "    border: 2px solid #3498db;"
+        "}"
+        "QSpinBox:focus {"
+        "    border: 2px solid #3498db;"
+        "}"
+        /* Make any selected text appear unhighlighted (keeps original color) */
+        "QSpinBox QLineEdit {"
+        "    selection-background-color: transparent;"
+        "    selection-color: #2c3e50;"
+        "}"
+    );
+    
+    QLabel *durationInfo = new QLabel("(How long error messages and comments stay visible)", this);
+    durationInfo->setStyleSheet("font-size: 11px; color: #7f8c8d; font-style: italic;");
+    
+    durationLayout->addWidget(messageDurationSpinBox);
+    durationLayout->addWidget(durationInfo);
+    durationLayout->addStretch();
+    
+    mainLayout->addLayout(durationLayout);
     
     mainLayout->addSpacing(20);
     
@@ -186,4 +219,11 @@ void VocabularySelectionDialog::onPracticeAllClicked() {
 
 void VocabularySelectionDialog::onBackClicked() {
     reject();
+}
+
+int VocabularySelectionDialog::getMessageDuration() const {
+    if (messageDurationSpinBox) {
+        return messageDurationSpinBox->value();
+    }
+    return 2; // default seconds fallback
 }

@@ -25,6 +25,7 @@ public:
         int incorrectRomajiCount,
         int correctEnglishCount,
         int incorrectEnglishCount,
+        int hintCount,
         const std::map<VocabularyWord*, int> &incorrectWords,
         QWidget *parent = nullptr
     );

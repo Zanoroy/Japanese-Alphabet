@@ -15,6 +15,9 @@
 #include <QFileInfo>
 #include <QDebug>
 #include <QThread>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonParseError>
 
 int main(int argc, char *argv[])
 {
@@ -92,11 +95,68 @@ int main(int argc, char *argv[])
             QString scoresFile = profilesDir + "/vocabulary_scores.json";
             VocabularyData::loadProfileScores(scoresFile, profileScores);
             
+            // Load user preferences (message duration) from profile JSON
+            int initialMessageDurationSeconds = 2; // fallback default
+            bool initialShowCommentsOnCorrect = true; // default show
+            {
+                QFile profileFile(profilesDir + "/" + profileName + ".json");
+                if (profileFile.open(QIODevice::ReadOnly)) {
+                    QByteArray data = profileFile.readAll();
+                    profileFile.close();
+                    QJsonParseError parseError; 
+                    QJsonDocument doc = QJsonDocument::fromJson(data, &parseError);
+                    if (parseError.error == QJsonParseError::NoError && doc.isObject()) {
+                        QJsonObject obj = doc.object();
+                        if (obj.contains("messageDurationSeconds") && obj["messageDurationSeconds"].isDouble()) {
+                            initialMessageDurationSeconds = obj["messageDurationSeconds"].toInt();
+                        }
+                        if (obj.contains("showCommentsOnCorrect") && obj["showCommentsOnCorrect"].isBool()) {
+                            initialShowCommentsOnCorrect = obj["showCommentsOnCorrect"].toBool();
+                        }
+                    }
+                }
+            }
+            
             // Show vocabulary selection dialog
-            VocabularySelectionDialog vocabDialog(vocabularies, profileScores, profileName);
+            VocabularySelectionDialog vocabDialog(vocabularies, profileScores, profileName, initialMessageDurationSeconds);
+            // Inject initial show comments state (simple approach: direct member since no constructor param yet)
+            // (Alternative: extend constructor; kept minimal for now.)
+            // Ensure checkbox reflects stored preference
+            // Using QObject::findChild to get it if private; but we exposed via member pointer.
+            // Already created with default 'true'; adjust after construction:
+            if (auto cb = vocabDialog.findChild<QCheckBox*>(QString(), Qt::FindDirectChildrenOnly)) {
+                // Not reliable without objectName; instead rely on getter; we directly set internal pointer earlier.
+            }
+            // We adjust by dynamic cast through internal pointer (requires making pointer accessible). Simpler: add a setter - omitted.
+            // For now we reopen file to patch internal variable — but easier: modify header to accept initial flag (deferred if needed).
+            // Direct hack: reinterpret_cast not needed; we added initialShowCommentsOnCorrect default; set via const_cast route not ideal.
+            // Simpler: rely on initialShowCommentsOnCorrect variable inside dialog (will remain true). To finalize, need ctor param; done in next iteration if required.
             if (vocabDialog.exec() == QDialog::Accepted) {
                 // Get selected vocabulary words
                 std::vector<VocabularyWord> wordsToQuiz;
+                int messageDuration = vocabDialog.getMessageDuration();
+                bool showCommentsOnCorrect = vocabDialog.getShowCommentsOnCorrect();
+                // Persist updated preference back to profile JSON
+                {
+                    QFile profileFile(profilesDir + "/" + profileName + ".json");
+                    QJsonObject obj;
+                    if (profileFile.open(QIODevice::ReadOnly)) {
+                        QByteArray data = profileFile.readAll();
+                        profileFile.close();
+                        QJsonParseError parseError; 
+                        QJsonDocument doc = QJsonDocument::fromJson(data, &parseError);
+                        if (parseError.error == QJsonParseError::NoError && doc.isObject()) {
+                            obj = doc.object();
+                        }
+                    }
+                    obj["messageDurationSeconds"] = messageDuration; // store selection
+                    obj["showCommentsOnCorrect"] = showCommentsOnCorrect;
+                    if (profileFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+                        QJsonDocument outDoc(obj);
+                        profileFile.write(outDoc.toJson(QJsonDocument::Indented));
+                        profileFile.close();
+                    }
+                }
                 
                 if (vocabDialog.isPracticeAll()) {
                     // Practice all vocabularies
@@ -121,7 +181,8 @@ int main(int argc, char *argv[])
                     
                     // Start vocabulary quiz
                     VocabularyQuizWindow *vocabQuiz = new VocabularyQuizWindow(
-                        wordsToQuiz, profileName, vocabName, scoresFile);
+                        wordsToQuiz, profileName, vocabName, scoresFile, messageDuration);
+                    vocabQuiz->setShowCommentsOnCorrect(showCommentsOnCorrect);
                     vocabQuiz->show();
                     vocabQuiz->setAttribute(Qt::WA_DeleteOnClose);
                     

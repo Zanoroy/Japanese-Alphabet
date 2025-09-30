@@ -127,7 +127,15 @@ Vocabulary VocabularyData::parseVocabulary(const QJsonObject &vocabObj) {
                 if (wordObj.contains("english")) {
                     word.english = wordObj["english"].toString();
                 }
-                
+                if (wordObj.contains("kanji")) {
+                    word.kanji = wordObj["kanji"].toString();
+                }
+                if (wordObj.contains("comment")) {
+                    word.comment = wordObj["comment"].toString();
+                }
+                if (wordObj.contains("hint")) {
+                    word.hint = wordObj["hint"].toString();
+                }                
                 if (!word.japanese.isEmpty() && !word.romaji.isEmpty() && !word.english.isEmpty()) {
                     vocab.words.push_back(word);
                 }

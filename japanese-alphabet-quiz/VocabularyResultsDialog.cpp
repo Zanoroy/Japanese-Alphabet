@@ -10,6 +10,7 @@ VocabularyResultsDialog::VocabularyResultsDialog(
     int incorrectRomajiCount,
     int correctEnglishCount,
     int incorrectEnglishCount,
+    int hintCount,
     const std::map<VocabularyWord*, int> &incorrectWords,
     QWidget *parent)
     : QDialog(parent), choice(ReturnToMenu) {
@@ -122,6 +123,19 @@ VocabularyResultsDialog::VocabularyResultsDialog(
 
         accuracyLabel->setStyleSheet(QString("color: %1; border-radius: 6px; margin: 5px; border: none;").arg(color));
         summaryLayout->addWidget(accuracyLabel);
+    }
+    
+    // Hint count display
+    if (hintCount > 0) {
+        QString hintText = QString("💡 Hints Used: %1").arg(hintCount);
+        
+        QLabel *hintLabel = new QLabel(hintText, this);
+        QFont hintFont;
+        hintFont.setPointSize(12);
+        hintFont.setBold(true);
+        hintLabel->setFont(hintFont);
+        hintLabel->setStyleSheet("color: #3498db; border-radius: 6px; margin: 5px; border: none;");
+        summaryLayout->addWidget(hintLabel);
     }
     
     // Add summary widget to main layout (always visible)
