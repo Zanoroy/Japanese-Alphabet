@@ -37,16 +37,6 @@ VocabularySelectionDialog::VocabularySelectionDialog(const std::vector<Vocabular
     mainLayout->addWidget(titleLabel);
     
     mainLayout->addSpacing(20);
-
-    // Show comments on correct answers
-    showCommentsOnCorrectCheckBox = new QCheckBox("Show comments after correct answers", this);
-    showCommentsOnCorrectCheckBox->setChecked(initialShowCommentsOnCorrect);
-    showCommentsOnCorrectCheckBox->setToolTip("If unchecked, comments will only appear after incorrect answers.");
-    mainLayout->addWidget(showCommentsOnCorrectCheckBox);
-    QLabel *commentsInfo = new QLabel("(Uncheck to hide extra commentary when you are correct)", this);
-    commentsInfo->setStyleSheet("font-size: 11px; color: #7f8c8d; font-style: italic;");
-    mainLayout->addWidget(commentsInfo);
-    mainLayout->addSpacing(10);
     
     // Vocabulary selection
     QLabel *selectLabel = new QLabel("Choose a vocabulary:", this);
