@@ -117,25 +117,13 @@ int main(int argc, char *argv[])
                 }
             }
             
-            // Show vocabulary selection dialog
+            // Show vocabulary selection dialog (comment preference now handled only inside quiz window)
             VocabularySelectionDialog vocabDialog(vocabularies, profileScores, profileName, initialMessageDurationSeconds);
-            // Inject initial show comments state (simple approach: direct member since no constructor param yet)
-            // (Alternative: extend constructor; kept minimal for now.)
-            // Ensure checkbox reflects stored preference
-            // Using QObject::findChild to get it if private; but we exposed via member pointer.
-            // Already created with default 'true'; adjust after construction:
-            if (auto cb = vocabDialog.findChild<QCheckBox*>(QString(), Qt::FindDirectChildrenOnly)) {
-                // Not reliable without objectName; instead rely on getter; we directly set internal pointer earlier.
-            }
-            // We adjust by dynamic cast through internal pointer (requires making pointer accessible). Simpler: add a setter - omitted.
-            // For now we reopen file to patch internal variable — but easier: modify header to accept initial flag (deferred if needed).
-            // Direct hack: reinterpret_cast not needed; we added initialShowCommentsOnCorrect default; set via const_cast route not ideal.
-            // Simpler: rely on initialShowCommentsOnCorrect variable inside dialog (will remain true). To finalize, need ctor param; done in next iteration if required.
             if (vocabDialog.exec() == QDialog::Accepted) {
                 // Get selected vocabulary words
                 std::vector<VocabularyWord> wordsToQuiz;
                 int messageDuration = vocabDialog.getMessageDuration();
-                bool showCommentsOnCorrect = vocabDialog.getShowCommentsOnCorrect();
+                bool showCommentsOnCorrect = initialShowCommentsOnCorrect; // still pass stored preference
                 // Persist updated preference back to profile JSON
                 {
                     QFile profileFile(profilesDir + "/" + profileName + ".json");

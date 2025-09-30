@@ -10,7 +10,6 @@
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QSpinBox>
-#include <QCheckBox>
 #include "VocabularyData.h"
 
 class VocabularySelectionDialog : public QDialog {
@@ -26,7 +25,7 @@ public:
     bool isPracticeAll() const { return practiceAll; }
     int getSelectedVocabularyIndex() const { return selectedIndex; }
     int getMessageDuration() const;
-    bool getShowCommentsOnCorrect() const { return showCommentsOnCorrectCheckBox ? showCommentsOnCorrectCheckBox->isChecked() : true; }
+    // Show-comments preference removed; handled entirely inside quiz window settings now.
 
 private slots:
     void onPracticeClicked();
@@ -41,7 +40,6 @@ private:
     QPushButton *practiceAllButton;
     QPushButton *backButton;
     QSpinBox *messageDurationSpinBox;
-    QCheckBox *showCommentsOnCorrectCheckBox;
     
     bool practiceAll;
     int selectedIndex;
@@ -49,7 +47,6 @@ private:
     const ProfileScores &scores;
     const QString &profileName;
     int initialMessageDurationSeconds;
-    bool initialShowCommentsOnCorrect { true };
 };
 
 #endif // VOCABULARYSELECTIONDIALOG_H
