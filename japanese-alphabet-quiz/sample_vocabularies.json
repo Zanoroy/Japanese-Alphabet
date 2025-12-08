@@ -1,6 +1,271 @@
 {
   "Vocabularies": [
     {
+      "Vocabulary": "Verbs to learn",
+      "words": [
+        {
+          "romaji": "okimasu",
+          "hirogana": "おきます",
+          "japanese": "おきます",
+          "kanji": "起きます",
+          "english": "wake up / get up",
+          "comment": "To wake up / Get up",
+          "hint": "first thing you do in a day"
+        },
+        {
+          "romaji": "nemasu",
+          "hirogana": "ねます",
+          "japanese": "ねます",
+          "kanji": "寝ます",
+          "english": "sleep / go to bed",
+          "comment": "To sleep / Go to bed",
+          "hint": "last thing you do in a day"
+        },
+        {
+          "romaji": "hatarakimasu",
+          "hirogana": "はたらきます",
+          "japanese": "はたらきます",
+          "kanji": "働きます",
+          "english": "work",
+          "comment": "work",
+          "hint": "What you do to earn money"
+        },
+        {
+          "romaji": "yasumimasu",
+          "hirogana": "やすみます",
+          "japanese": "やすみます",
+          "kanji": "休みます",
+          "english": "rest",
+          "comment": "To rest / Take a break",
+          "hint": "What you do to recharge"
+        },
+        {
+          "romaji": "benkyo-shimasu",
+          "hirogana": "べんきょうします",
+          "japanese": "べんきょうします",
+          "kanji": "勉強します",
+          "english": "study",
+          "comment": "To study",
+          "hint": "What you do to learn"
+        },
+        {
+          "romaji": "ikimasu",
+          "hirogana": "いきます",
+          "japanese": "いきます",
+          "kanji": "行きます",
+          "english": "go",
+          "comment": "To go",
+          "hint": "What you do to travel somewhere"
+        },
+        {
+          "romaji": "kimasu",
+          "hirogana": "きます",
+          "japanese": "きます",
+          "kanji": "来ます",
+          "english": "come",
+          "comment": "To come",
+          "hint": "What you do when you arrive at a place"
+        },
+        {
+          "romaji": "kaerimasu",
+          "hirogana": "かえります",
+          "japanese": "かえります",
+          "kanji": "帰ります",
+          "english": "go home / return",
+          "comment": "To return / Go back",
+          "hint": "What you do at the end of the day"
+        },
+        {
+          "romaji": "tabemasu",
+          "hirogana": "たべます",
+          "japanese": "たべます",
+          "kanji": "食べます",
+          "english": "eat",
+          "comment": "To eat",
+          "hint": "What you do to consume food"
+        },
+        {
+          "romaji": "nomimasu",
+          "hirogana": "のみます",
+          "japanese": "のみます",
+          "kanji": "飲みます",
+          "english": "drink",
+          "comment": "To drink",
+          "hint": "What you do to consume liquids"
+        },
+        {
+          "romaji": "suimasu",
+          "hirogana": "すいます",
+          "japanese": "すいます",
+          "kanji": "吸います",
+          "english": "smoke",
+          "comment": "To inhale / Suck",
+          "hint": "What you do to take in air or liquid"
+        },
+        {
+          "romaji": "mimasu",
+          "hirogana": "みます",
+          "japanese": "みます",
+          "kanji": "見ます",
+          "english": "see / watch",
+          "comment": "To see / Watch",
+          "hint": "What you do with your eyes"
+        },
+        {
+          "romaji": "kikimasu",
+          "hirogana": "ききます",
+          "japanese": "ききます",
+          "kanji": "聞きます",
+          "english": "listen / hear",
+          "comment": "To listen / Hear",
+          "hint": "What you do with your ears"
+        },
+        {
+          "romaji": "yomimasu",
+          "hirogana": "よみます",
+          "japanese": "よみます",
+          "kanji": "読みます",
+          "english": "read",
+          "comment": "To read",
+          "hint": "What you do with written text"
+        },
+        {
+          "romaji": "kakimasu",
+          "hirogana": "かきます",
+          "japanese": "かきます",
+          "kanji": "書きます",
+          "english": "write",
+          "comment": "To write",
+          "hint": "What you do with a pen or pencil"
+        },
+        {
+          "romaji": "kaimasu",
+          "hirogana": "かいます",
+          "japanese": "かいます",
+          "kanji": "買います",
+          "english": "buy",
+          "comment": "To buy",
+          "hint": "What you do to acquire something in exchange for money"
+        },
+        {
+          "romaji": "torimasu",
+          "hirogana": "とります",
+          "japanese": "とります",
+          "kanji": "取ります",
+          "english": "take",
+          "comment": "To take",
+          "hint": "What you do to grab or receive something"
+        },
+        {
+          "romaji": "shimasu",
+          "japanese": "します",
+          "kanji": "します",
+          "english": "do",
+          "comment": "To do",
+          "hint": "What you do to perform an action"
+        },
+        {
+          "romaji": "aimasu",
+          "hirogana": "あいます",
+          "japanese": "あいます",
+          "kanji": "会います",
+          "english": "meet",
+          "comment": "To meet",
+          "hint": "What you do when you see someone"
+        },
+        {
+          "romaji": "kirimasu",
+          "hirogana": "きります",
+          "katakana": "キリマス",
+          "japanese": "きリます",
+          "kanji": "切ります",
+          "english": "Cut / Slice",
+          "comment": "To cut or slice something",
+          "hint": ""
+        },
+        {
+          "romaji": "okurimasu",
+          "hirogana": "おくります",
+          "katakana": "オクリマス",
+          "japanese": "おくります",
+          "kanji": "送ります",
+          "english": "send",
+          "comment": "To send something",
+          "hint": ""
+        },
+        {
+          "romaji": "agemasu",
+          "hirogana": "あげます",
+          "katakana": "アゲマス",
+          "japanese": "あげます",
+          "kanji": "上げます",
+          "english": "give",
+          "comment": "To give something",
+          "hint": ""
+        },
+        {
+          "romaji": "morimasu",
+          "hirogana": "もらいます",
+          "katakana": "モライマス",
+          "japanese": "もらいます",
+          "kanji": "もらいます",
+          "english": "receive",
+          "comment": "To receive something",
+          "hint": ""
+        },
+        {
+          "romaji": "kashimasu",
+          "hirogana": "かします",
+          "katakana": "カシマス",
+          "japanese": "かします",
+          "kanji": "貸します",
+          "english": "lend",
+          "comment": "To lend something",
+          "hint": ""
+        },
+        {
+          "romaji": "karimasu",
+          "hirogana": "かります",
+          "katakana": "カリマス",
+          "japanese": "かります",
+          "kanji": "借ります",
+          "english": "borrow",
+          "comment": "To borrow something",
+          "hint": ""
+        },
+        {
+          "romaji": "oshiemasu",
+          "hirogana": "おしえます",
+          "katakana": "オシエマス",
+          "japanese": "おしえます",
+          "kanji": "教えます",
+          "english": "teach",
+          "comment": "To teach someone",
+          "hint": ""
+        },
+        {
+          "romaji": "naraimasu",
+          "hirogana": "ならいます",
+          "katakana": "ナライマス",
+          "japanese": "ならいます",
+          "kanji": "習います",
+          "english": "learn",
+          "comment": "To learn something",
+          "hint": ""
+        },
+        {
+          "romaji": "kakemasu denwa",
+          "hirogana": "かけます でんわ",
+          "katakana": "カケマス デンワ",
+          "japanese": "かけます でんわ",
+          "kanji": "かけます 電話",
+          "english": "make a phone call",
+          "comment": "To make a phone call",
+          "hint": ""
+        }
+      ]
+    },
+    {
       "Vocabulary": "Vocabulary set 1",
       "words": [
         {
@@ -35,19 +300,19 @@
         {
           "romaji": "san",
           "japanese": "さん",
-          "english": "Mr/Ms",
+          "english": "Mr./Mrs./Ms. / honorific suffix",
           "hint": "Used after a person's name"
         },
         {
           "romaji": "chan",
           "japanese": "ちゃん",
-          "english": "child",
-          "hint": "Used after a child's name"
+          "english": "affectionate / affectionate suffix",
+          "hint": "Used after a child's name or as endearment"
         },
         {
           "romaji": "jin",
           "japanese": "じん",
-          "english": "nationality",
+          "english": "nationality suffix / nationality",
           "comment": "e.g., Australia-jin - Australian person",
           "hint": "にほん-じん means Japanese person"
         },
@@ -117,7 +382,7 @@
           "comment": "used when telling someone's age"
         },
         {
-          "romaji": "nan-sai",
+          "romaji": "nansai",
           "japanese": "なんさい",
           "english": "how old",
           "comment": "used when asking someone's age"
@@ -142,20 +407,20 @@
         },
         {
           "romaji": "dozo yoroshiku",
-          "japanese": "[どうぞ] よろしく",
+          "japanese": "どうぞ よろしく",
           "english": "nice to meet you",
           "comment": "used at the end of self-introduction (polite)",
           "hint": "Often used after 'はじめまして' to express pleasure in meeting someone."
         },
         {
-          "romaji": "~kara kimashita",
+          "romaji": "kara kimashita",
           "japanese": "から きました",
           "english": "I come from",
           "comment": "e.g., Australia kara kimashita - I come from Australia"
         },
         {
           "romaji": "onegai shimasu",
-          "japanese": "[おねがいします]",
+          "japanese": "おねがい します",
           "english": "please",
           "comment": "more polite than おねがい",
           "hint": "Used when making a polite request."
@@ -167,7 +432,7 @@
           "comment": "polite way to preface a question"
         },
         {
-          "romaji": "onamae wa?",
+          "romaji": "onamae wa",
           "japanese": "おなまえは",
           "english": "May I have your name",
           "comment": "polite",
@@ -176,7 +441,7 @@
         {
           "romaji": "kochira wa ~san desu",
           "japanese": "こちら は ~さん です",
-          "english": "This is Mr/Ms",
+          "english": "This is Mr./Ms. / This is Mr. / This is Mrs. / This is Ms.",
           "comment": "used to introduce someone",
           "hint": "Used when introducing someone else."
         }
@@ -218,7 +483,7 @@
         {
           "japanese": "あの",
           "romaji": "ano",
-          "english": "that ~ (thing over there)",
+          "english": "that",
           "comment": "Used with a noun, e.g. あの ほん (ano hon) - that book (far from both the speaker and listener)"
         },
         {
@@ -253,14 +518,14 @@
           "romaji": "noto",
           "japanese": "ノート",
           "english": "notebook",
-          "comment": "Pronounced nooto"
+          "comment": ""
         },
         {
-          "romaji": "techo",
+          "romaji": "techou / techo",
           "japanese": "てちょう",
           "kanji": "手帳",
           "english": "personal organizer",
-          "comment": "Pronounced techoo"
+          "comment": ""
         },
         {
           "romaji": "meishi",
@@ -270,10 +535,10 @@
           "comment": ""
         },
         {
-          "romaji": "kado",
+          "romaji": "kado / kaado",
           "japanese": "カード",
           "english": "card",
-          "comment": "Pronounced kaado"
+          "comment": ""
         },
         {
           "romaji": "enpitsu",
@@ -283,18 +548,18 @@
           "comment": ""
         },
         {
-          "romaji": "borupen",
+          "romaji": "boorupen / borupen",
           "japanese": "ボールペン",
           "kanji": "",
           "english": "ballpoint pen",
-          "comment": "Pronounced booru pen"
+          "comment": ""
         },
         {
-          "romaji": "shapu penshiru",
+          "romaji": "shaapu penshiru / shapu penshiru",
           "japanese": "シャープペンシル",
           "kanji": "鋼筆",
           "english": "mechanical pencil",
-          "comment": "Pronounced shaapu penshiru"
+          "comment": ""
         },
         {
           "romaji": "kagi",
@@ -307,8 +572,8 @@
           "romaji": "tokei",
           "japanese": "とけい",
           "kanji": "時計",
-          "english": "watch; clock",
-          "comment": "Pronounced tokee"
+          "english": "watch / clock",
+          "comment": ""
         },
         {
           "romaji": "kasa",
@@ -353,11 +618,11 @@
           "comment": ""
         },
         {
-          "romaji": "konpyuta",
+          "romaji": "konpyuuta / konpyuta",
           "japanese": "コンピュータ",
           "kanji": "",
           "english": "computer",
-          "comment": "Pronounced konpyuuta"
+          "comment": ""
         },
         {
           "romaji": "kuruma",
@@ -388,28 +653,28 @@
           "comment": ""
         },
         {
-          "romaji": "kohii",
+          "romaji": "koohii / kohi / kōhī",
           "japanese": "コーヒー",
           "kanji": "",
           "english": "coffee",
-          "comment": "Pronounced koohii"
+          "comment": ""
         },
         {
           "romaji": "omiyage",
           "japanese": "おみやげ",
           "kanji": "",
           "english": "souvenir",
-          "comment": "souvenir or present/gift"
+          "comment": "souvenir / present / gift"
         },
         {
-          "romaji": "ei-go",
+          "romaji": "eigo",
           "japanese": "えいご",
           "kanji": "英語",
           "english": "English language",
           "comment": ""
         },
         {
-          "romaji": "Nihon-go",
+          "romaji": "Nihongo",
           "japanese": "にほんご",
           "kanji": "日本語",
           "english": "Japanese language",
@@ -437,11 +702,11 @@
           "comment": ""
         },
         {
-          "romaji": "ano",
+          "romaji": "ano / anoo",
           "japanese": "あのう",
           "kanji": "",
           "english": "um; well",
-          "comment": "Pronounced anoo"
+          "comment": ""
         },
         {
           "romaji": "e",
@@ -458,11 +723,11 @@
           "comment": "Here you are. (used when offering someone something)"
         },
         {
-          "romaji": "Domo arigatou gozaimasu",
-          "japanese": "どうもありがとうございます",
+          "romaji": "Domo arigatougozaimasu",
+          "japanese": "どうも ありがとうございます",
           "kanji": "",
           "english": "Thank you very much",
-          "comment": "Pronounced doomo arigatou. A polite way to say thank you."
+          "comment": "Pronounced doomo arigatou (dōmo arigatōgozaimasu). A polite way to say thank you."
         },
         {
           "romaji": "So desu ka",
@@ -507,12 +772,12 @@
         {
           "japanese": "どれ",
           "romaji": "dore",
-          "english": "which (thing)?"
+          "english": "which"
         },
         {
           "japanese": "どの",
           "romaji": "dono",
-          "english": "which ~?"
+          "english": "which"
         },
         {
           "japanese": "ここ",
@@ -532,12 +797,737 @@
         {
           "japanese": "どこ",
           "romaji": "doko",
-          "english": "(place) where?"
+          "english": "where"
         }        
       ]
     },
     {
-      "Vocabulary": "Basic Greetings",
+      "Vocabulary": "Vocabulary set 6",
+      "words": [
+        {
+          "japanese": "たべます",
+          "romaji": "tabemasu",
+          "english": "eat",
+          "kanji": "食べます",
+          "hint": "Action performed with food",
+          "comment": "Polite form of 'to eat'"
+        },
+        {
+          "japanese": "のみます",
+          "romaji": "nomimasu",
+          "english": "drink",
+          "kanji": "飲みます",
+          "hint": "Action performed with liquid",
+          "comment": "Polite form of 'to drink'"
+        },
+        {
+          "japanese": "すいます",
+          "romaji": "suimasu",
+          "english": "smoke",
+          "kanji": "吸います",
+            "hint": "Action performed with tobacco",
+          "comment": "Polite form of 'to smoke'"
+        },
+        {
+          "japanese": "みます",
+          "romaji": "mimasu",
+          "english": "watch / see",
+          "kanji": "見ます",
+          "hint": "using your eyes",
+          "comment": "Polite form of 'to watch/see'"
+        },
+        {
+          "japanese": "ききます",
+          "romaji": "kikimasu",
+          "english": "listen / hear",
+          "kanji": "聞きます",
+          "hint": "using your ears",
+          "comment": "Polite form of 'to listen'"
+        },
+        {
+          "japanese": "よみます",
+          "romaji": "yomimasu",
+          "english": "read",
+          "kanji": "読みます",
+          "hint": "digesting written content",
+          "comment": "Polite form of 'to read'"
+        },
+        {
+          "japanese": "かきます",
+          "romaji": "kakimasu",
+          "english": "write / draw / paint",
+          "kanji": "書きます",
+          "hint": "using your hand to create text or images",
+          "comment": "Polite form of 'to write/draw/paint'"
+        },
+        {
+          "japanese": "かいます",
+          "romaji": "kaimasu",
+          "english": "buy",
+          "kanji": "買います",
+          "hint": "Action performed when obtaining something in exchange for money",
+          "comment": "Polite form of 'to buy'"
+        },
+        {
+          "japanese": "とります",
+          "romaji": "torimasu",
+          "english": "take",
+          "kanji": "取ります",
+          "hint": "Action performed to acquire or hold something",
+          "comment": "Polite form of 'to take'"
+        },
+        {
+          "japanese": "します",
+          "romaji": "shimasu",
+          "english": "do / play",
+          "kanji": "します",
+          "hint": "General action verb",
+          "comment": "Polite form of 'do'"
+        },
+        {
+          "japanese": "あいます",
+          "romaji": "aimasu",
+          "english": "meet",
+          "kanji": "会います",
+          "hint": "Action performed when encountering someone",
+          "comment": "Polite form of 'to meet'"
+        },
+        {
+          "japanese": "ごはん",
+          "romaji": "gohan",
+          "english": "rice / meal",
+          "kanji": "ご飯",
+          "hint": "Common word for 'rice' or 'meal'",
+          "comment": "Common word for 'rice' or 'meal'"
+        },
+        {
+          "japanese": "あさごはん",
+          "romaji": "asagohan",
+          "english": "breakfast",
+          "kanji": "朝ご飯",
+          "hint": "The first meal of the day, usually eaten in the morning.",
+          "comment": "Common word for 'breakfast'"
+        },
+        {
+          "japanese": "ひるごはん",
+          "romaji": "hirugohan",
+          "english": "lunch",
+          "kanji": "昼ご飯",
+          "hint": "The meal eaten around midday.",
+          "comment": "Common word for 'lunch'"
+        },
+        {
+          "japanese": "ばんごはん",
+          "romaji": "bangohan",
+          "english": "dinner / supper",
+          "kanji": "晩ご飯",
+          "hint": "The meal eaten in the evening.",
+          "comment": "Common word for 'dinner'"
+        },
+        {
+          "japanese": "おやつ",
+          "romaji": "oyatsu",
+          "english": "snack",
+          "kanji": "おやつ",
+          "hint": "Light food eaten between meals",
+          "comment": "Common word for 'snack'"
+        },
+        {
+          "japanese": "デザート",
+          "romaji": "dezaato",
+          "english": "dessert",
+          "kanji": "デザート",
+          "hint": "Sweet course eaten at the end of a meal",
+          "comment": "Loanword from English 'dessert'"
+        },
+        {
+          "japanese": "パン",
+          "romaji": "pan",
+          "english": "bread",
+          "kanji": "パン",
+          "hint": "Common staple food made from flour",
+          "comment": "Loanword from Portuguese 'pão'"
+        },
+        {
+          "japanese": "たまご",
+          "romaji": "tamago",
+          "english": "egg",
+          "kanji": "卵",
+          "hint": "Common food item, often used in cooking",
+          "comment": "Common word for 'egg'"
+        },
+        {
+          "japanese": "にく",
+          "romaji": "niku",
+          "english": "meat",
+          "kanji": "肉",
+          "hint": "Common food item, often used in cooking",
+          "comment": "Common word for 'meat'"
+        },
+        {
+          "japanese": "さかな",
+          "romaji": "sakana",
+          "english": "fish",
+          "kanji": "魚",
+          "hint": "Common food item, often used in cooking",
+          "comment": "Common word for 'fish'"
+        },
+        {
+          "japanese": "やさい",
+          "romaji": "yasai",
+          "english": "vegetable",
+          "kanji": "野菜",
+          "hint": "Common food item, often used in cooking",
+          "comment": "Common word for 'vegetable'"
+        },
+        {
+          "japanese": "くだもの",
+          "romaji": "kudamono",
+          "english": "fruit",
+          "kanji": "果物",
+          "hint": "Common food item, often eaten raw",
+          "comment": "Common word for 'fruit'"
+        },
+        {
+          "japanese": "みず",
+          "romaji": "mizu",
+          "english": "water",
+          "kanji": "水",
+          "hint": "Essential liquid for life",
+          "comment": "Common word for 'water'"
+        },
+        {
+          "japanese": "おちゃ",
+          "romaji": "ocha",
+          "english": "green tea / tea",
+          "kanji": "お茶",
+          "hint": "Traditional Japanese tea",
+          "comment": "Common word for 'green tea'"
+        },
+        {
+          "japanese": "こうちゃ",
+          "romaji": "koucha / koocha",
+          "english": "black tea",
+          "kanji": "紅茶",
+          "hint": "Type of tea that is fully oxidized",
+          "comment": "Common word for 'black tea'"
+        },
+        {
+          "japanese": "ぎゅうにゅう",
+          "romaji": "gyunyu / gyuunyuu",
+          "english": "milk",
+          "kanji": "牛乳",
+          "hint": "Common white liquid produced by mammals",
+          "comment": "Common word for 'milk'"
+        },
+        {
+          "japanese": "ジュース",
+          "romaji": "jusu / juusu",
+          "english": "juice",
+          "kanji": "ジュース",
+          "hint": "Sweet liquid made from fruits",
+          "comment": "Loanword from English 'juice'"
+        },
+        {
+          "japanese": "ビール",
+          "romaji": "biiru",
+          "english": "beer",
+          "kanji": "ビール",
+          "hint": "Alcoholic beverage made from fermented grains",
+          "comment": "Loanword from German 'Bier'"
+        },
+        {
+          "japanese": "おさけ",
+          "romaji": "o-sake / osake",
+          "english": "sake / alcohol",
+          "kanji": "お酒",
+          "hint": "Traditional Japanese rice wine",
+          "comment": "Common word for 'sake'"
+        },
+        {
+          "japanese": "たばこ",
+          "romaji": "tabako",
+          "english": "tobacco",
+          "kanji": "煙草",
+          "hint": "Plant used for smoking",
+          "comment": "Common word for 'tobacco'"
+        },
+        {
+          "japanese": "てがみ",
+          "romaji": "tegami",
+          "english": "letter",
+          "kanji": "手紙",
+          "hint": "Written message sent by mail",
+          "comment": "Common word for 'letter'"
+        },
+        {
+          "japanese": "レポート",
+          "romaji": "repooto / repoto",
+          "english": "report",
+          "kanji": "レポート",
+          "hint": "Document presenting information",
+          "comment": "Loanword from English 'report'"
+        },
+        {
+          "japanese": "しゃしん",
+          "romaji": "shashin",
+          "english": "photograph",
+          "kanji": "写真",
+          "hint": "Image captured by a camera",
+          "comment": "Common word for 'photograph'"
+        },
+        {
+          "japanese": "ビデオ",
+          "romaji": "bideo",
+          "english": "video",
+          "kanji": "ビデオ",
+          "hint": "Moving visual images",
+          "comment": "Loanword from English 'video'"
+        },
+        {
+          "japanese": "みせ",
+          "romaji": "mise",
+          "english": "store / shop",
+          "kanji": "店",
+          "hint": "Place where you can buy things",
+          "comment": "Common word for 'store'"
+        },
+        {
+          "japanese": "にわ",
+          "romaji": "niwa",
+          "english": "garden",
+          "kanji": "庭",
+          "hint": "Area of land for growing plants",
+          "comment": "Common word for 'garden'"
+        },
+        {
+          "japanese": "しゅくだい",
+          "romaji": "shukudai",
+          "english": "homework",
+          "kanji": "宿題",
+          "hint": "Assignments given to students",
+          "comment": "Common word for 'homework'"
+        },        {
+          "japanese": "テニス",
+          "romaji": "tenisu",
+          "english": "tennis",
+          "kanji": "テニス",
+          "hint": "Racket sport played on a court",
+          "comment": "Loanword from English 'tennis'"
+        },
+        {
+          "japanese": "サッカー",
+          "romaji": "sakkaa / sakka",
+          "english": "soccer / football",
+          "kanji": "",
+          "hint": "Popular team sport played with a round ball",
+          "comment": "Loanword from English 'soccer'"
+        },
+        {
+          "japanese": "はなみ",
+          "romaji": "hanami",
+          "english": "flower viewing",
+          "kanji": "花見",
+          "hint": "Traditional Japanese custom of enjoying the beauty of cherry blossoms",
+          "comment": "Common word for 'flower viewing'"
+        },
+        {
+          "japanese": "なに",
+          "romaji": "nani",
+          "english": "what",
+          "kanji": "何",
+          "hint": "Used to ask questions about things",
+          "comment": "Common word for 'what'"
+        },
+        {
+          "japanese": "いっしょに",
+          "romaji": "isshoni / issho ni",
+          "english": "together",
+          "kanji": "一緒に",
+          "hint": "Used to express doing something with someone",
+          "comment": "Common phrase for 'together'"
+        },
+        {
+          "japanese": "ちょっと",
+          "romaji": "chotto",
+          "english": "a little",
+          "kanji": "",
+          "hint": "Used to indicate a small amount or degree",
+          "comment": "Common word for 'a little'"
+        },
+        {
+          "japanese": "いつも",
+          "romaji": "itsumo",
+          "english": "always / usually",
+          "kanji": "いつも",
+          "hint": "Used to express frequency",
+          "comment": "Common word for 'always'"
+        },
+        {
+          "japanese": "ときどき",
+          "romaji": "tokidoki",
+          "english": "sometimes",
+          "kanji": "時々",
+          "hint": "Used to express occasional frequency",
+          "comment": "Common word for 'sometimes'"
+        },
+        {
+          "japanese": "それから",
+          "romaji": "sorekara",
+          "english": "after that / and then",
+          "kanji": "",
+          "hint": "Used to indicate a sequence of events",
+          "comment": "Common phrase for 'after that'"
+        },
+        {
+          "japanese": "ええ",
+          "romaji": "ee, e",
+          "english": "yes",
+          "kanji": "",
+          "hint": "used to express agreement",
+          "comment": "used to express agreement"
+        },
+        {
+          "japanese": "いいですね",
+          "romaji": "ii desu ne",
+          "english": "That's good / Nice",
+          "kanji": "",
+          "hint": "Used to express approval or agreement",
+          "comment": "Common phrase for 'That's good'"
+        },
+        {
+          "japanese": "わかりました",
+          "romaji": "wakarimashita",
+          "english": "I understand / I see / Got it",
+          "kanji": "分かりました",
+          "hint": "Used to express understanding",
+          "comment": "Common phrase for 'I understand'"
+        },    
+        {
+          "japanese": "なんですか",
+          "romaji": "nan desu ka",
+          "english": "What is it?",
+          "kanji": "何ですか",
+          "hint": "Used to ask for clarification or more information",
+          "comment": "Used to ask for clarification or more information"
+        },
+        {
+          "japanese": "じゃ、またあした",
+          "romaji": "Ja, mata ashita / Ja, mataashita",
+          "english": "Well then, see you tomorrow",
+          "kanji": "じゃ、また明日",
+          "hint": "Used to say goodbye when you will see someone the next day",
+          "comment": "Common phrase for 'see you tomorrow'"
+        }
+      ]
+    },
+    {
+      "Vocabulary": "Vocabulary set 7",
+      "words": [
+        {
+          "romaji": "kirimasu",
+          "hirogana": "きります",
+          "katakana": "キリマス",
+          "japanese": "きリます",
+          "kanji": "切ります",
+          "english": "Cut / Slice",
+          "comment": "To cut or slice something",
+          "hint": ""
+        },
+        {
+          "romaji": "okurimasu",
+          "hirogana": "おくります",
+          "katakana": "オクリマス",
+          "japanese": "おくります",
+          "kanji": "送ります",
+          "english": "send",
+          "comment": "To send something",
+          "hint": ""
+        },
+        {
+          "romaji": "agemasu",
+          "hirogana": "あげます",
+          "katakana": "アゲマス",
+          "japanese": "あげます",
+          "kanji": "上げます",
+          "english": "give",
+          "comment": "To give something",
+          "hint": ""
+        },
+        {
+          "romaji": "morimasu",
+          "hirogana": "もらいます",
+          "katakana": "モライマス",
+          "japanese": "もらいます",
+          "kanji": "もらいます",
+          "english": "receive",
+          "comment": "To receive something",
+          "hint": ""
+        },
+        {
+          "romaji": "kashimasu",
+          "hirogana": "かします",
+          "katakana": "カシマス",
+          "japanese": "かします",
+          "kanji": "貸します",
+          "english": "lend",
+          "comment": "To lend something",
+          "hint": ""
+        },
+        {
+          "romaji": "karimasu",
+          "hirogana": "かります",
+          "katakana": "カリマス",
+          "japanese": "かります",
+          "kanji": "借ります",
+          "english": "borrow",
+          "comment": "To borrow something",
+          "hint": ""
+        },
+        {
+          "romaji": "oshiemasu",
+          "hirogana": "おしえます",
+          "katakana": "オシエマス",
+          "japanese": "おしえます",
+          "kanji": "教えます",
+          "english": "teach",
+          "comment": "To teach someone",
+          "hint": ""
+        },
+        {
+          "romaji": "naraimasu",
+          "hirogana": "ならいます",
+          "katakana": "ナライマス",
+          "japanese": "ならいます",
+          "kanji": "習います",
+          "english": "learn",
+          "comment": "To learn something",
+          "hint": ""
+        },
+        {
+          "romaji": "kakemasu denwa",
+          "hirogana": "かけます でんわ",
+          "katakana": "カケマス デンワ",
+          "japanese": "かけます でんわ",
+          "kanji": "かけます 電話",
+          "english": "make a phone call",
+          "comment": "To make a phone call",
+          "hint": ""
+        },
+        {
+          "romaji": "te",
+          "hirogana": "て",
+          "katakana": "テ",
+          "japanese": "手",
+          "kanji": "手",
+          "english": "hand / arm",
+          "comment": "Appendage at the end of the arm",
+          "hint": ""
+        },
+        {
+          "romaji": "hashi",
+          "hirogana": "はし",
+          "katakana": "ハシ",
+          "japanese": "箸",
+          "kanji": "箸",
+          "english": "chopsticks",
+          "comment": "Eating utensils used in East Asia",
+          "hint": ""
+        },
+        {
+          "romaji": "spoon",
+          "hirogana": "スプーン",
+          "katakana": "スプーン",
+          "japanese": "スプーン",
+          "kanji": "スプーン",
+          "english": "spoon",
+          "comment": "Utensil for eating or serving food",
+          "hint": ""
+        },
+        {
+          "romaji": "keifu",
+          "hirogana": "ないふ",
+          "katakana": "ナイフ",
+          "japanese": "ナイフ",
+          "kanji": "ナイフ",
+          "english": "knife",
+          "comment": "Utensil for cutting food",
+          "hint": ""
+        },
+        {
+          "romaji": "forku",
+          "hirogana": "ふぉーく",
+          "katakana": "フォーク",
+          "japanese": "フォーク",
+          "kanji": "フォーク",
+          "english": "fork",
+          "comment": "Utensil for eating or serving food",
+          "hint": ""
+        },
+        {
+          "romaji": "hasami",
+          "hirogana": "はさみ",
+          "katakana": "ハサミ",
+          "japanese": "はさみ",
+          "kanji": "鋏",
+          "english": "scissors",
+          "comment": "Utensil for cutting paper or other materials",
+          "hint": ""
+        },
+        {
+          "romaji": "pasokon",
+          "hirogana": "ぱそこん",
+          "katakana": "パソコン",
+          "japanese": "パソコン",
+          "kanji": "パソコン",
+          "english": "personal computer",
+          "comment": "",
+          "hint": ""
+        },
+        {
+          "romaji": "keitai",
+          "hirogana": "けいたい",
+          "katakana": "ケータイ",
+          "japanese": "けいたい",
+          "kanji": "携帯",
+          "english": "mobile phone / cell phone",
+          "comment": "",
+          "hint": ""
+        },
+        {
+          "romaji": "meeru",
+          "hirogana": "めーる",
+          "katakana": "メール",
+          "japanese": "メール",
+          "kanji": "メール",
+          "english": "e-mail",
+          "comment": "",
+          "hint": ""
+        },
+        {
+          "romaji": "nengajou",
+          "hirogana": "ねんがじょう",
+          "katakana": "ネンガジョウ",
+          "japanese": "年賀状",
+          "kanji": "年賀状",
+          "english": "New Year's greeting card",
+          "comment": "",
+          "hint": ""
+        },
+        {
+          "romaji": "hoshii",
+          "hirogana": "ほしい",
+          "katakana": "ホシイ",
+          "japanese": "欲しい",
+          "kanji": "欲しい",
+          "english": "Stapler",
+          "comment": "",
+          "hint": ""
+        },
+        {
+          "romaji": "",
+          "hirogana": "",
+          "katakana": "",
+          "japanese": "",
+          "kanji": "",
+          "english": "Sellotape / Scotch tape",
+          "comment": "",
+          "hint": ""
+        },
+        {
+          "romaji": "",
+          "hirogana": "",
+          "katakana": "",
+          "japanese": "",
+          "kanji": "",
+          "english": "rubber / eraser",
+          "comment": "",
+          "hint": ""
+        },
+        {
+          "romaji": "",
+          "hirogana": "",
+          "katakana": "",
+          "japanese": "",
+          "kanji": "",
+          "english": "paper",
+          "comment": "",
+          "hint": ""
+        },
+        {
+          "romaji": "",
+          "hirogana": "",
+          "katakana": "",
+          "japanese": "",
+          "kanji": "",
+          "english": "flower / blossom",
+          "comment": "",
+          "hint": ""
+        },
+        {
+          "romaji": "",
+          "hirogana": "",
+          "katakana": "",
+          "japanese": "",
+          "kanji": "",
+          "english": "shirt",
+          "comment": "",
+          "hint": ""
+        },
+        {
+          "romaji": "",
+          "hirogana": "",
+          "katakana": "",
+          "japanese": "",
+          "kanji": "",
+          "english": "present / gift",
+          "comment": "",
+          "hint": ""
+        },
+        {
+          "romaji": "",
+          "hirogana": "",
+          "katakana": "",
+          "japanese": "",
+          "kanji": "",
+          "english": "luggage / baggage / parcel",
+          "comment": "",
+          "hint": ""
+        },
+        {
+          "romaji": "",
+          "hirogana": "",
+          "katakana": "",
+          "japanese": "",
+          "kanji": "",
+          "english": "money",
+          "comment": "",
+          "hint": ""
+        },
+        {
+          "romaji": "",
+          "hirogana": "",
+          "katakana": "",
+          "japanese": "",
+          "kanji": "",
+          "english": "ticket",
+          "comment": "",
+          "hint": ""
+        },
+        {
+          "romaji": "",
+          "hirogana": "",
+          "katakana": "",
+          "japanese": "",
+          "kanji": "",
+          "english": "Christmas",
+          "comment": "",
+          "hint": ""
+        }        
+      ]
+    },
+    {
+      "Vocabulary": "Basic",
       "words": [
         {
           "japanese": "こんにちは",
@@ -563,6 +1553,16 @@
           "japanese": "さようなら",
           "romaji": "sayounara",
           "english": "goodbye"
+        },
+        {
+          "romaji": "kudasai",
+          "hirogana": "ください",
+          "katakana": "クダサイ",
+          "japanese": "ください",
+          "kanji": "ください",
+          "english": "please give me",
+          "comment": "A polite way to ask for something",
+          "hint": ""
         }
       ]
     },

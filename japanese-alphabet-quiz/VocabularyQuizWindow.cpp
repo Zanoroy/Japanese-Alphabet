@@ -15,25 +15,52 @@
 #include <QJsonParseError>
 
 VocabularyQuizWindow::VocabularyQuizWindow(const std::vector<VocabularyWord> &words, const QString &profileName, const QString &vocabularyName, const QString &scoresFilePath, const int messageDuration,QWidget *parent)
-    : QWidget(parent), vocabularyWords(words), currentWordIndex(0), 
-      expectingRomaji(true), expectingEnglish(false), 
+    : QWidget(parent), vocabularyWords(words), currentWordIndex(0),
+      expectingRomaji(true), expectingEnglish(false),
       correctRomajiCount(0), incorrectRomajiCount(0),
       correctEnglishCount(0), incorrectEnglishCount(0), hintCount(0),
-      profileName(profileName), vocabularyName(vocabularyName), 
+      profileName(profileName), vocabularyName(vocabularyName),
       scoresFilePath(scoresFilePath), quizStarted(false), messageDuration(messageDuration) {
-    
+
+    // Load preferences from profile JSON
+    QFile profileFile(QDir::currentPath() + "/profiles/" + profileName + ".json");
+    if (profileFile.open(QIODevice::ReadOnly)) {
+        QByteArray data = profileFile.readAll();
+        profileFile.close();
+        QJsonParseError parseError;
+        QJsonDocument doc = QJsonDocument::fromJson(data, &parseError);
+        if (parseError.error == QJsonParseError::NoError && doc.isObject()) {
+            QJsonObject obj = doc.object();
+
+            // Load showCommentsOnCorrect
+            if (obj.contains("showCommentsOnCorrect") && obj["showCommentsOnCorrect"].isBool()) {
+                showCommentsOnCorrect = obj["showCommentsOnCorrect"].toBool();
+            }
+
+            // Load expectRomaji (default true)
+            if (obj.contains("expectRomaji") && obj["expectRomaji"].isBool()) {
+                initialExpectRomaji = obj["expectRomaji"].toBool();
+            }
+
+            // Load expectEnglish (default true)
+            if (obj.contains("expectEnglish") && obj["expectEnglish"].isBool()) {
+                initialExpectEnglish = obj["expectEnglish"].toBool();
+            }
+        }
+    }
+
     // Shuffle the words for random order
     std::random_device rd;
     std::mt19937 g(rd());
     std::shuffle(vocabularyWords.begin(), vocabularyWords.end(), g);
-    
+
     setupUI();
 }
 
 void VocabularyQuizWindow::setupUI() {
     setWindowTitle("Vocabulary Quiz");
     setGeometry(200, 200, 500, 250);
-    
+
 #ifdef Q_OS_WIN
     setWindowIcon(QIcon(":/appicon.ico"));
 #else
@@ -41,7 +68,7 @@ void VocabularyQuizWindow::setupUI() {
 #endif
 
     mainLayout = new QVBoxLayout(this);
-    
+
     // Title row with settings button
     QHBoxLayout *titleRow = new QHBoxLayout();
     settingsButton = new QToolButton(this);
@@ -61,26 +88,26 @@ void VocabularyQuizWindow::setupUI() {
     titleRow->addWidget(titleLabel, 1);
     titleRow->addStretch();
     mainLayout->addLayout(titleRow);
-    
+
     mainLayout->addSpacing(20);
-    
+
     // Checkbox section
     instructionLabel = new QLabel("Choose what to practice (at least one must be selected):", this);
     mainLayout->addWidget(instructionLabel);
-    
+
     checkboxLayout = new QHBoxLayout();
     romajiCheckbox = new QCheckBox("Romaji", this);
     englishCheckbox = new QCheckBox("English", this);
-    romajiCheckbox->setChecked(true);
-    englishCheckbox->setChecked(true);
-    
+    romajiCheckbox->setChecked(initialExpectRomaji);
+    englishCheckbox->setChecked(initialExpectEnglish);
+
     checkboxLayout->addWidget(romajiCheckbox);
     checkboxLayout->addWidget(englishCheckbox);
     checkboxLayout->addStretch();
-    
+
     mainLayout->addLayout(checkboxLayout);
     mainLayout->addSpacing(20);
-    
+
     // Start button
     startButton = new QPushButton("Start Quiz", this);
     startButton->setStyleSheet(
@@ -101,7 +128,7 @@ void VocabularyQuizWindow::setupUI() {
         "}"
     );
     mainLayout->addWidget(startButton);
-    
+
     // Quiz elements (initially hidden)
     questionLabel = new QLabel("", this);
     QFont questionFont;
@@ -111,7 +138,7 @@ void VocabularyQuizWindow::setupUI() {
     questionLabel->setStyleSheet("padding: 20px; border: 2px solid #bdc3c7; border-radius: 8px;");
     questionLabel->hide();
     mainLayout->addWidget(questionLabel);
-    
+
     answerInput = new QLineEdit(this);
     answerInput->setPlaceholderText("Enter your answer...");
     answerInput->setStyleSheet("font-size: 16px; padding: 8px;");
@@ -119,10 +146,10 @@ void VocabularyQuizWindow::setupUI() {
     mainLayout->addWidget(answerInput);
     // Event filter to allow early dismissal of messages when typing
     answerInput->installEventFilter(this);
-    
+
     // Create horizontal layout for buttons
     QHBoxLayout *buttonLayout = new QHBoxLayout();
-    
+
     checkButton = new QPushButton("Check Answer", this);
     checkButton->setStyleSheet(
         "QPushButton {"
@@ -138,7 +165,7 @@ void VocabularyQuizWindow::setupUI() {
         "}"
     );
     checkButton->hide();
-    
+
     hintButton = new QPushButton("Hint", this);
     hintButton->setStyleSheet(
         "QPushButton {"
@@ -159,13 +186,13 @@ void VocabularyQuizWindow::setupUI() {
         "}"
     );
     hintButton->hide();
-    
+
     buttonLayout->addWidget(checkButton);
     buttonLayout->addWidget(hintButton);
     buttonLayout->addStretch(); // Push buttons to the left
-    
+
     mainLayout->addLayout(buttonLayout);
-    
+
     // (Inline feedback labels removed; using modal feedback dialog)
 
     // Score label
@@ -174,7 +201,7 @@ void VocabularyQuizWindow::setupUI() {
     scoreLabel->setStyleSheet("font-size: 12px; color: #7f8c8d; padding: 5px;");
     scoreLabel->hide();
     mainLayout->addWidget(scoreLabel);
-    
+
     // Back button (initially hidden)
     backButton = new QPushButton("Back to Menu", this);
     backButton->setStyleSheet(
@@ -192,9 +219,9 @@ void VocabularyQuizWindow::setupUI() {
     );
     backButton->hide();
     mainLayout->addWidget(backButton);
-    
+
     mainLayout->addStretch();
-    
+
     // Connect signals
     connect(romajiCheckbox, &QCheckBox::checkStateChanged, this, &VocabularyQuizWindow::onRomajiCheckboxChanged);
     connect(englishCheckbox, &QCheckBox::checkStateChanged, this, &VocabularyQuizWindow::onEnglishCheckboxChanged);
@@ -217,7 +244,7 @@ void VocabularyQuizWindow::setupUI() {
         if (profileFile.open(QIODevice::ReadOnly)) {
             QByteArray data = profileFile.readAll();
             profileFile.close();
-            QJsonParseError parseError; 
+            QJsonParseError parseError;
             QJsonDocument doc = QJsonDocument::fromJson(data, &parseError);
             if (parseError.error == QJsonParseError::NoError && doc.isObject()) {
                 obj = doc.object();
@@ -235,10 +262,48 @@ void VocabularyQuizWindow::setupUI() {
 
 void VocabularyQuizWindow::onRomajiCheckboxChanged(int state) {
     updateCheckboxStates();
+
+    // Persist to profile JSON
+    QFile profileFile(QDir::currentPath() + "/profiles/" + profileName + ".json");
+    QJsonObject obj;
+    if (profileFile.open(QIODevice::ReadOnly)) {
+        QByteArray data = profileFile.readAll();
+        profileFile.close();
+        QJsonParseError parseError;
+        QJsonDocument doc = QJsonDocument::fromJson(data, &parseError);
+        if (parseError.error == QJsonParseError::NoError && doc.isObject()) {
+            obj = doc.object();
+        }
+    }
+    obj["expectRomaji"] = romajiCheckbox->isChecked();
+    if (profileFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        QJsonDocument outDoc(obj);
+        profileFile.write(outDoc.toJson(QJsonDocument::Indented));
+        profileFile.close();
+    }
 }
 
 void VocabularyQuizWindow::onEnglishCheckboxChanged(int state) {
     updateCheckboxStates();
+
+    // Persist to profile JSON
+    QFile profileFile(QDir::currentPath() + "/profiles/" + profileName + ".json");
+    QJsonObject obj;
+    if (profileFile.open(QIODevice::ReadOnly)) {
+        QByteArray data = profileFile.readAll();
+        profileFile.close();
+        QJsonParseError parseError;
+        QJsonDocument doc = QJsonDocument::fromJson(data, &parseError);
+        if (parseError.error == QJsonParseError::NoError && doc.isObject()) {
+            obj = doc.object();
+        }
+    }
+    obj["expectEnglish"] = englishCheckbox->isChecked();
+    if (profileFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        QJsonDocument outDoc(obj);
+        profileFile.write(outDoc.toJson(QJsonDocument::Indented));
+        profileFile.close();
+    }
 }
 
 void VocabularyQuizWindow::updateCheckboxStates() {
@@ -256,7 +321,7 @@ void VocabularyQuizWindow::updateCheckboxStates() {
 void VocabularyQuizWindow::onStartClicked() {
     expectingRomaji = romajiCheckbox->isChecked();
     expectingEnglish = englishCheckbox->isChecked();
-    
+
     // Hide setup UI
     // checkboxLayout->hide();
     titleLabel->hide();
@@ -271,15 +336,15 @@ void VocabularyQuizWindow::onStartClicked() {
     checkButton->show();
     hintButton->show();
     scoreLabel->show();
-    
+
     quizStarted = true;
     currentWordIndex = 0;
-    
+
     // Reset statistics
     correctRomajiCount = incorrectRomajiCount = 0;
     correctEnglishCount = incorrectEnglishCount = 0;
     incorrectWords.clear();
-    
+
     showNextWord();
 }
 
@@ -288,9 +353,9 @@ void VocabularyQuizWindow::showNextWord() {
         showResults();
         return;
     }
-    
+
     const VocabularyWord &word = vocabularyWords[currentWordIndex];
-    questionLabel->setText(word.japanese);
+    questionLabel->setText(word.hiragana.isEmpty() ? (word.katakana.isEmpty() ? word.kanji : word.katakana) : word.hiragana);
     answerInput->clear();
     answerInput->setFocus();
     // (No inline labels to clear)
@@ -307,19 +372,20 @@ void VocabularyQuizWindow::showNextWord() {
         titleLabel->setText("Enter English");
     }
     titleLabel->show();
-    
+
     updateScore();
 }
 
 void VocabularyQuizWindow::onCheckAnswer() {
     if (currentWordIndex >= vocabularyWords.size()) return;
-    
+
     QString userInput = answerInput->text().trimmed().toLower();
     if (userInput.isEmpty()) return;
-    
+
     const VocabularyWord &currentWord = vocabularyWords[currentWordIndex];
     bool correct = false;
-    
+    qDebug() << "Check Answer"; // Debug message
+
     if (expectingRomaji && expectingEnglish) {
         // Both romaji and english expected, separated by comma
         if(userInput.isEmpty()) {
@@ -340,15 +406,31 @@ void VocabularyQuizWindow::onCheckAnswer() {
                 userRomaji = parts[0].trimmed();
                 userEnglish = parts[0].trimmed();
             }
-            bool romajiCorrect = (userRomaji == currentWord.romaji.toLower());
-            bool englishCorrect = (userEnglish == currentWord.english.toLower());
-            
+            bool romajiCorrect = false;
+            bool englishCorrect = false;
+
+            QStringList romajiParts = currentWord.romaji.toLower().split(" / ");
+            for (const QString &part : romajiParts) {
+                if (part.trimmed() == userRomaji) {
+                    romajiCorrect = true;
+                    break;
+                }
+            }
+
+            QStringList englishParts = currentWord.english.toLower().split(" / ");
+            for (const QString &part : englishParts) {
+                if (part.trimmed() == userEnglish) {
+                    englishCorrect = true;
+                    break;
+                }
+            }
+
             if (romajiCorrect) correctRomajiCount++;
             else incorrectRomajiCount++;
-            
+
             if (englishCorrect) correctEnglishCount++;
             else incorrectEnglishCount++;
-            
+
             if (romajiCorrect && englishCorrect) {
               correct = true;
             } else {
@@ -371,7 +453,7 @@ void VocabularyQuizWindow::onCheckAnswer() {
         checkEnglishAnswer();
         return;
     }
-    
+
     if (correct) {
                 if(!currentWord.comment.isEmpty() && showCommentsOnCorrect) {
                     showComment(currentWord.comment); // increments index after dismissal
@@ -386,17 +468,17 @@ void VocabularyQuizWindow::onCheckAnswer() {
 
 void VocabularyQuizWindow::onHintClicked() {
     if (currentWordIndex >= vocabularyWords.size()) return;
-    
+
     const VocabularyWord &currentWord = vocabularyWords[currentWordIndex];
-    
+
     // Check if the current word has a hint
     if (currentWord.hint.isEmpty()) {
         return; // Button should be disabled, but just in case
     }
-    
+
     // Increment hint counter
     hintCount++;
-    
+
     // Show hint dialog
     QMessageBox hintDialog;
     hintDialog.setWindowTitle("Hint");
@@ -409,27 +491,35 @@ void VocabularyQuizWindow::onHintClicked() {
 void VocabularyQuizWindow::checkRomajiAnswer() {
     const VocabularyWord &currentWord = vocabularyWords[currentWordIndex];
     QString userInput = answerInput->text().trimmed().toLower();
-    QString correctRomaji = currentWord.romaji.toLower();
-    
-    if (userInput == correctRomaji) {
+    bool romajiCorrect = false;
+
+    QStringList romajiParts = currentWord.romaji.toLower().split(" / ");
+    for (const QString &part : romajiParts) {
+        if (part.trimmed() == userInput) {
+            romajiCorrect = true;
+            break;
+        }
+    }
+
+    if (romajiCorrect) {
         correctRomajiCount++;
-                if(!currentWord.comment.isEmpty() && showCommentsOnCorrect) {
-                    showComment(currentWord.comment); // increments index after dismissal
-                } else {
-                    currentWordIndex++;
-                    QTimer::singleShot(200, this, &VocabularyQuizWindow::showNextWord);
-                }
+        if(!currentWord.comment.isEmpty() && showCommentsOnCorrect) {
+            showComment(currentWord.comment); // increments index after dismissal
+        } else {
+            currentWordIndex++;
+            QTimer::singleShot(200, this, &VocabularyQuizWindow::showNextWord);
+        }
     } else {
         incorrectRomajiCount++;
         incorrectWords[const_cast<VocabularyWord*>(&currentWord)]++;
-        
+
         // Highlight incorrect characters in red
         QString errorMsg = "Correct romaji: ";
-        for (int i = 0; i < correctRomaji.length(); ++i) {
-            if (i < userInput.length() && userInput[i] == correctRomaji[i]) {
-                errorMsg += correctRomaji[i];
+        for (int i = 0; i < romajiParts.length(); ++i) {
+            if (i < userInput.length() && userInput[i] == romajiParts[i]) {
+                errorMsg += romajiParts[i];
             } else {
-                errorMsg += QString("<span style='color: red;'>%1</span>").arg(correctRomaji[i]);
+                errorMsg += QString("<span style='color: red;'>%1</span>").arg(romajiParts[i]);
             }
         }
         showError(errorMsg, currentWord.comment);
@@ -439,16 +529,24 @@ void VocabularyQuizWindow::checkRomajiAnswer() {
 void VocabularyQuizWindow::checkEnglishAnswer() {
     const VocabularyWord &currentWord = vocabularyWords[currentWordIndex];
     QString userInput = answerInput->text().trimmed().toLower();
-    QString correctEnglish = currentWord.english.toLower();
-    
-    if (userInput == correctEnglish) {
+    bool englishCorrect = false;
+
+    QStringList englishParts = currentWord.english.toLower().split(" / ");
+    for (const QString &part : englishParts) {
+        if (part.trimmed() == userInput) {
+            englishCorrect = true;
+            break;
+        }
+    }
+
+    if (englishCorrect) {
         correctEnglishCount++;
-                if(!currentWord.comment.isEmpty() && showCommentsOnCorrect) {
-                    showComment(currentWord.comment); // increments index after dismissal
-                } else {
-                    currentWordIndex++;
-                    QTimer::singleShot(200, this, &VocabularyQuizWindow::showNextWord);
-                }
+        if(!currentWord.comment.isEmpty() && showCommentsOnCorrect) {
+            showComment(currentWord.comment); // increments index after dismissal
+        } else {
+            currentWordIndex++;
+            QTimer::singleShot(200, this, &VocabularyQuizWindow::showNextWord);
+        }
     } else {
         incorrectEnglishCount++;
         incorrectWords[const_cast<VocabularyWord*>(&currentWord)]++;
@@ -488,7 +586,7 @@ void VocabularyQuizWindow::onMessageTimeout() {
 
 void VocabularyQuizWindow::updateScore() {
     QString scoreText = QString("Progress: %1/%2").arg(currentWordIndex + 1).arg(vocabularyWords.size());
-    
+
     if (expectingRomaji || expectingEnglish) {
         scoreText += " | ";
         if (expectingRomaji) {
@@ -499,7 +597,7 @@ void VocabularyQuizWindow::updateScore() {
             scoreText += QString("English - Correct: %1, Incorrect: %2").arg(correctEnglishCount).arg(incorrectEnglishCount);
         }
     }
-    
+
     scoreLabel->setText(scoreText);
 }
 
@@ -507,21 +605,21 @@ void VocabularyQuizWindow::showResults() {
     // Calculate percentages
     double romajiPercent = 0.0;
     double englishPercent = 0.0;
-    
+
     if (expectingRomaji) {
         int totalRomaji = correctRomajiCount + incorrectRomajiCount;
         if (totalRomaji > 0) {
             romajiPercent = (double(correctRomajiCount) / totalRomaji) * 100.0;
         }
     }
-    
+
     if (expectingEnglish) {
         int totalEnglish = correctEnglishCount + incorrectEnglishCount;
         if (totalEnglish > 0) {
             englishPercent = (double(correctEnglishCount) / totalEnglish) * 100.0;
         }
     }
-    
+
     // Save scores if we have a vocabulary name (not "All Vocabularies")
     if (!vocabularyName.isEmpty() && vocabularyName != "All Vocabularies") {
         ProfileScores profileScores;
@@ -529,7 +627,7 @@ void VocabularyQuizWindow::showResults() {
         VocabularyData::updateProfileVocabularyScore(profileScores, profileName, vocabularyName, romajiPercent, englishPercent);
         VocabularyData::saveProfileScores(scoresFilePath, profileScores);
     }
-    
+
     // Show results dialog
     VocabularyResultsDialog resultsDialog(
         expectingRomaji,
@@ -542,12 +640,12 @@ void VocabularyQuizWindow::showResults() {
         incorrectWords,
         this
     );
-    
+
     int result = resultsDialog.exec();
-    
+
     if (result == QDialog::Accepted) {
         VocabularyResultsDialog::ResultChoice choice = resultsDialog.getChoice();
-        
+
         if (choice == VocabularyResultsDialog::TryAgain) {
             resetQuiz();
         } else {
@@ -570,7 +668,7 @@ void VocabularyQuizWindow::resetQuiz() {
     scoreLabel->hide();
     backButton->hide();
     // (No inline labels)
-    
+
     // Show setup UI
     titleLabel->setText("Vocabulary Quiz Setup");
     titleLabel->show();
@@ -578,17 +676,17 @@ void VocabularyQuizWindow::resetQuiz() {
     romajiCheckbox->show();
     englishCheckbox->show();
     startButton->show();
-    
+
     // Reset quiz state
     quizStarted = false;
     currentWordIndex = 0;
-    
+
     // Reset statistics
     correctRomajiCount = incorrectRomajiCount = 0;
     correctEnglishCount = incorrectEnglishCount = 0;
     hintCount = 0;
     incorrectWords.clear();
-    
+
     // Shuffle words again for new quiz
     std::random_device rd;
     std::mt19937 g(rd());

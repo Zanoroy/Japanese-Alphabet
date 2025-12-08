@@ -15,8 +15,9 @@ class QJsonObject;
 
 struct VocabularyWord {
     QString romaji;
-    QString japanese;
     QString english;
+    QString hiragana;
+    QString katakana;
     QString kanji; // Optional kanji representation
     QString comment; // Optional comment for additional info
     QString hint; // Optional hint to assist the user

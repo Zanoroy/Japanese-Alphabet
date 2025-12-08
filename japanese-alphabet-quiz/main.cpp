@@ -107,8 +107,11 @@ int main(int argc, char *argv[])
                     QJsonDocument doc = QJsonDocument::fromJson(data, &parseError);
                     if (parseError.error == QJsonParseError::NoError && doc.isObject()) {
                         QJsonObject obj = doc.object();
-                        if (obj.contains("messageDurationSeconds") && obj["messageDurationSeconds"].isDouble()) {
-                            initialMessageDurationSeconds = obj["messageDurationSeconds"].toInt();
+                        if (obj.contains("messageDurationSeconds")) {
+                            int savedDuration = obj["messageDurationSeconds"].toInt(2); // default to 2 if conversion fails
+                            if (savedDuration >= 1 && savedDuration <= 10) { // validate range
+                                initialMessageDurationSeconds = savedDuration;
+                            }
                         }
                         if (obj.contains("showCommentsOnCorrect") && obj["showCommentsOnCorrect"].isBool()) {
                             initialShowCommentsOnCorrect = obj["showCommentsOnCorrect"].toBool();
@@ -123,8 +126,7 @@ int main(int argc, char *argv[])
                 // Get selected vocabulary words
                 std::vector<VocabularyWord> wordsToQuiz;
                 int messageDuration = vocabDialog.getMessageDuration();
-                bool showCommentsOnCorrect = initialShowCommentsOnCorrect; // still pass stored preference
-                // Persist updated preference back to profile JSON
+                // Persist updated message duration preference back to profile JSON
                 {
                     QFile profileFile(profilesDir + "/" + profileName + ".json");
                     QJsonObject obj;
@@ -138,7 +140,7 @@ int main(int argc, char *argv[])
                         }
                     }
                     obj["messageDurationSeconds"] = messageDuration; // store selection
-                    obj["showCommentsOnCorrect"] = showCommentsOnCorrect;
+                    // Note: showCommentsOnCorrect is managed by VocabularyQuizWindow itself
                     if (profileFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
                         QJsonDocument outDoc(obj);
                         profileFile.write(outDoc.toJson(QJsonDocument::Indented));
@@ -149,6 +151,9 @@ int main(int argc, char *argv[])
                 if (vocabDialog.isPracticeAll()) {
                     // Practice all vocabularies
                     wordsToQuiz = VocabularyData::getAllWords(vocabularies);
+                } else if (vocabDialog.isPracticeSelected()) {
+                    // Practice selected words
+                    wordsToQuiz = vocabDialog.getSelectedWords();
                 } else {
                     // Practice selected vocabulary
                     int selectedIndex = vocabDialog.getSelectedVocabularyIndex();
@@ -160,7 +165,9 @@ int main(int argc, char *argv[])
                 if (!wordsToQuiz.empty()) {
                     // Determine vocabulary name for score tracking
                     QString vocabName = "All Vocabularies";
-                    if (!vocabDialog.isPracticeAll()) {
+                    if (vocabDialog.isPracticeSelected()) {
+                        vocabName = "Selected Words";
+                    } else if (!vocabDialog.isPracticeAll()) {
                         int selectedIndex = vocabDialog.getSelectedVocabularyIndex();
                         if (selectedIndex >= 0 && selectedIndex < vocabularies.size()) {
                             vocabName = vocabularies[selectedIndex].name;
@@ -170,7 +177,7 @@ int main(int argc, char *argv[])
                     // Start vocabulary quiz
                     VocabularyQuizWindow *vocabQuiz = new VocabularyQuizWindow(
                         wordsToQuiz, profileName, vocabName, scoresFile, messageDuration);
-                    vocabQuiz->setShowCommentsOnCorrect(showCommentsOnCorrect);
+                    vocabQuiz->setShowCommentsOnCorrect(initialShowCommentsOnCorrect);
                     vocabQuiz->show();
                     vocabQuiz->setAttribute(Qt::WA_DeleteOnClose);
                     

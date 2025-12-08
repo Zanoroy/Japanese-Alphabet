@@ -117,9 +117,14 @@ Vocabulary VocabularyData::parseVocabulary(const QJsonObject &vocabObj) {
             if (wordValue.isObject()) {
                 QJsonObject wordObj = wordValue.toObject();
                 VocabularyWord word;
-                
-                if (wordObj.contains("japanese")) {
-                    word.japanese = wordObj["japanese"].toString();
+                if (wordObj.contains("japanese") && word.hiragana.isEmpty()) { // backwards compatibility
+                    word.hiragana = wordObj["japanese"].toString();
+                }
+                if (wordObj.contains("hiragana")) {
+                    word.hiragana = wordObj["hiragana"].toString();
+                }
+                if (wordObj.contains("katakana")) {
+                    word.katakana = wordObj["katakana"].toString();
                 }
                 if (wordObj.contains("romaji")) {
                     word.romaji = wordObj["romaji"].toString();
@@ -135,8 +140,8 @@ Vocabulary VocabularyData::parseVocabulary(const QJsonObject &vocabObj) {
                 }
                 if (wordObj.contains("hint")) {
                     word.hint = wordObj["hint"].toString();
-                }                
-                if (!word.japanese.isEmpty() && !word.romaji.isEmpty() && !word.english.isEmpty()) {
+                }
+                if (!word.hiragana.isEmpty() && !word.romaji.isEmpty() && !word.english.isEmpty()) {
                     vocab.words.push_back(word);
                 }
             }
@@ -153,7 +158,8 @@ QJsonObject VocabularyData::vocabularyToJson(const Vocabulary &vocab) {
     QJsonArray wordsArray;
     for (const VocabularyWord &word : vocab.words) {
         QJsonObject wordObj;
-        wordObj["japanese"] = word.japanese;
+        wordObj["hiragana"] = word.hiragana;
+        wordObj["katakana"] = word.katakana;
         wordObj["romaji"] = word.romaji;
         wordObj["english"] = word.english;
         wordsArray.append(wordObj);

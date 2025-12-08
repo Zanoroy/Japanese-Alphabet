@@ -1,17 +1,25 @@
 #include "VocabularySelectionDialog.h"
+#include "WordSelectionDialog.h"
 #include <QFont>
 #include <QIcon>
 #include <QComboBox>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonParseError>
+#include <QFile>
+#include <QDir>
+#include <QSet>
 
 VocabularySelectionDialog::VocabularySelectionDialog(const std::vector<Vocabulary> &vocabularies, 
                                                    const ProfileScores &scores,
                                                    const QString &profileName,
                                                    int initialMessageDurationSeconds,
                                                    QWidget *parent)
-    : QDialog(parent), practiceAll(false), selectedIndex(-1), vocabularies(vocabularies), scores(scores), profileName(profileName), initialMessageDurationSeconds(initialMessageDurationSeconds) {
+    : QDialog(parent), practiceAll(false), practiceSelected(false), selectedIndex(-1), vocabularies(vocabularies), scores(scores), profileName(profileName), initialMessageDurationSeconds(initialMessageDurationSeconds) {
     
     setWindowTitle("Select Vocabulary");
-    setFixedSize(550, 450);
+    setFixedSize(550, 500);
 #ifdef Q_OS_WIN
     setWindowIcon(QIcon(":/appicon.ico"));
 #else
@@ -45,7 +53,31 @@ VocabularySelectionDialog::VocabularySelectionDialog(const std::vector<Vocabular
 
     populateVocabularyComboBox();
     
-    mainLayout->addWidget(vocabularyComboBox);
+    // Layout for vocabulary selection and cog button
+    QHBoxLayout *vocabLayout = new QHBoxLayout();
+    vocabLayout->addWidget(vocabularyComboBox);
+    
+    // Add cog button for word selection
+    selectWordsButton = new QPushButton(this);
+    selectWordsButton->setText("⚙");  // Gear/cog character
+    selectWordsButton->setToolTip("Select Words");
+    selectWordsButton->setFixedSize(40, 30);
+    selectWordsButton->setStyleSheet(
+        "QPushButton {"
+        "    font-size: 16px;"
+        "    font-weight: bold;"
+        "    border: 2px solid #3498db;"
+        "    border-radius: 6px;"
+        "    background-color: #303030;"
+        "}"
+        "QPushButton:hover {"
+        "    background-color: #0980cf;"
+        "    color: white;"
+        "}"
+    );
+    
+    vocabLayout->addWidget(selectWordsButton);
+    mainLayout->addLayout(vocabLayout);
     
     mainLayout->addSpacing(15);
     
@@ -97,6 +129,7 @@ VocabularySelectionDialog::VocabularySelectionDialog(const std::vector<Vocabular
     // Buttons
     practiceButton = new QPushButton("Practice Selected", this);
     practiceAllButton = new QPushButton("Practice All", this);
+    practiceSelectedButton = new QPushButton("Practice Selected Words", this);
     backButton = new QPushButton("Back to Main Menu", this);
     
     // Style buttons
@@ -136,16 +169,20 @@ VocabularySelectionDialog::VocabularySelectionDialog(const std::vector<Vocabular
     
     practiceButton->setStyleSheet(buttonStyle);
     practiceAllButton->setStyleSheet(buttonStyle);
+    practiceSelectedButton->setStyleSheet(buttonStyle);
     backButton->setStyleSheet(backButtonStyle);
     
     mainLayout->addWidget(practiceButton);
     mainLayout->addWidget(practiceAllButton);
+    mainLayout->addWidget(practiceSelectedButton);
     mainLayout->addSpacing(10);
     mainLayout->addWidget(backButton);
     
     // Connect signals
     connect(practiceButton, &QPushButton::clicked, this, &VocabularySelectionDialog::onPracticeClicked);
     connect(practiceAllButton, &QPushButton::clicked, this, &VocabularySelectionDialog::onPracticeAllClicked);
+    connect(practiceSelectedButton, &QPushButton::clicked, this, &VocabularySelectionDialog::onPracticeSelectedClicked);
+    connect(selectWordsButton, &QPushButton::clicked, this, &VocabularySelectionDialog::onSelectWordsClicked);
     connect(backButton, &QPushButton::clicked, this, &VocabularySelectionDialog::onBackClicked);
     
     // Connect combo box selection
@@ -157,6 +194,10 @@ VocabularySelectionDialog::VocabularySelectionDialog(const std::vector<Vocabular
     // Enable/disable practice button based on selection
     practiceButton->setEnabled(!vocabularies.empty());
     practiceAllButton->setEnabled(!vocabularies.empty());
+    
+    // Load selected words and enable/disable the practice selected button
+    loadSelectedWords();
+    practiceSelectedButton->setEnabled(!selectedWords.empty());
     
     // Select first item by default if available
     if (!vocabularies.empty()) {
@@ -201,8 +242,26 @@ void VocabularySelectionDialog::populateVocabularyComboBox() {
 
 void VocabularySelectionDialog::onPracticeAllClicked() {
     practiceAll = true;
+    practiceSelected = false;
     selectedIndex = -1;
     accept();
+}
+
+void VocabularySelectionDialog::onPracticeSelectedClicked() {
+    practiceSelected = true;
+    practiceAll = false;
+    selectedIndex = -1;
+    if (!selectedWords.empty()) {
+        accept();
+    }
+}
+
+void VocabularySelectionDialog::onSelectWordsClicked() {
+    WordSelectionDialog dialog(vocabularies, profileName, this);
+    if (dialog.exec() == QDialog::Accepted) {
+        loadSelectedWords(); // Reload after selection dialog closes
+        practiceSelectedButton->setEnabled(!selectedWords.empty());
+    }
 }
 
 void VocabularySelectionDialog::onBackClicked() {
@@ -214,4 +273,54 @@ int VocabularySelectionDialog::getMessageDuration() const {
         return messageDurationSpinBox->value();
     }
     return 2; // default seconds fallback
+}
+
+std::vector<VocabularyWord> VocabularySelectionDialog::getSelectedWords() const {
+    return selectedWords;
+}
+
+void VocabularySelectionDialog::loadSelectedWords() {
+    selectedWords.clear();
+    
+    QString profilePath = QDir::currentPath() + "/profiles/" + profileName + ".json";
+    QFile profileFile(profilePath);
+    
+    if (!profileFile.open(QIODevice::ReadOnly)) {
+        return; // No saved selection
+    }
+    
+    QByteArray data = profileFile.readAll();
+    profileFile.close();
+    
+    QJsonParseError parseError;
+    QJsonDocument doc = QJsonDocument::fromJson(data, &parseError);
+    if (parseError.error != QJsonParseError::NoError || !doc.isObject()) {
+        return;
+    }
+    
+    QJsonObject obj = doc.object();
+    if (!obj.contains("selectedWords") || !obj["selectedWords"].isArray()) {
+        return;
+    }
+    
+    QJsonArray selectedWordsArray = obj["selectedWords"].toArray();
+    
+    // Create a set of selected word keys for quick lookup
+    QSet<QString> selectedWordKeys;
+    for (const QJsonValue &value : selectedWordsArray) {
+        if (value.isString()) {
+            selectedWordKeys.insert(value.toString());
+        }
+    }
+    
+    // Find the selected words in vocabularies
+    for (const Vocabulary &vocab : vocabularies) {
+        for (const VocabularyWord &word : vocab.words) {
+            QString keyWord = word.hiragana.isEmpty() ? (word.katakana.isEmpty() ? word.kanji : word.katakana) : word.hiragana;
+            QString wordKey = QString("%1|%2|%3").arg(keyWord, word.romaji, word.english);
+            if (selectedWordKeys.contains(wordKey)) {
+                selectedWords.push_back(word);
+            }
+        }
+    }
 }

@@ -32,6 +32,7 @@ add_executable(japanese-alphabet-quiz
     MainMenuDialog.cpp
     VocabularyData.cpp
     VocabularySelectionDialog.cpp
+    WordSelectionDialog.cpp
     VocabularyQuizWindow.cpp
     VocabularyResultsDialog.cpp
     FeedbackDialog.cpp

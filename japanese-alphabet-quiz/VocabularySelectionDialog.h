@@ -23,26 +23,34 @@ public:
                                      QWidget *parent = nullptr);
     
     bool isPracticeAll() const { return practiceAll; }
+    bool isPracticeSelected() const { return practiceSelected; }
     int getSelectedVocabularyIndex() const { return selectedIndex; }
     int getMessageDuration() const;
-    // Show-comments preference removed; handled entirely inside quiz window settings now.
+    std::vector<VocabularyWord> getSelectedWords() const;
 
 private slots:
     void onPracticeClicked();
     void onPracticeAllClicked();
+    void onPracticeSelectedClicked();
+    void onSelectWordsClicked();
     void onBackClicked();
 
 private:
     void populateVocabularyComboBox();
+    void loadSelectedWords();
     
     QComboBox *vocabularyComboBox;
     QPushButton *practiceButton;
     QPushButton *practiceAllButton;
+    QPushButton *practiceSelectedButton;
+    QPushButton *selectWordsButton;
     QPushButton *backButton;
     QSpinBox *messageDurationSpinBox;
     
     bool practiceAll;
+    bool practiceSelected;
     int selectedIndex;
+    std::vector<VocabularyWord> selectedWords;
     const std::vector<Vocabulary> &vocabularies;
     const ProfileScores &scores;
     const QString &profileName;

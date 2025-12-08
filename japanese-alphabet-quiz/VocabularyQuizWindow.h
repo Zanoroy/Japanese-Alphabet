@@ -72,7 +72,7 @@ private:
     int currentWordIndex;
     bool expectingRomaji;
     bool expectingEnglish;
-    
+
     // Statistics
     int correctRomajiCount;
     int incorrectRomajiCount;
@@ -89,6 +89,8 @@ private:
     int messageDuration; // Duration to show messages in seconds
     bool quizStarted;
     bool showCommentsOnCorrect { true };
+    bool initialExpectRomaji { true };
+    bool initialExpectEnglish { true };
 };
 
 #endif // VOCABULARYQUIZWINDOW_H
